@@ -9,19 +9,21 @@ public abstract class CharacterBattle : MonoBehaviour {
     public int health;
     public int attack;
     public int defense;
-    public float accuracy;
-    public float evasion;
     public bool hitTarget = false;
     protected AudioSource audioSource;
     [SerializeField] protected AudioClip attackClip;
 
     protected List<string> attackKeys = new();
 
-    protected List<AttackAction> attackActions = new();
+    protected List<CharacterAction> attackActions = new();
 
     protected virtual void Start() {
         health = maxHealth;
         audioSource = GetComponent<AudioSource>();
+
+        attackKeys.Add("Attack");
+
+        attackActions.Add(AttackList.GetInstance().GetAction(attackKeys[0]));
     }
 
     public virtual void Kill(){}
@@ -30,7 +32,7 @@ public abstract class CharacterBattle : MonoBehaviour {
 
     public virtual void PrepareCombat(){}
 
-    public virtual AttackAction GetAction(int i)
+    public virtual CharacterAction GetAction(int i)
     {
         if (i < attackActions.Count) return attackActions[i];
 
@@ -42,9 +44,9 @@ public abstract class CharacterBattle : MonoBehaviour {
         return attackActions.Count;
     }
 
-    public virtual bool DoAction(AttackAction action, CharacterBattle target)
+    public virtual void DoAction(CharacterAction action, CharacterBattle target)
     {
-        return action.Action(this, target);
+        action.Action(this, target);
     }
 
     public virtual void PlayAttackSound()
@@ -81,5 +83,5 @@ public abstract class CharacterBattle : MonoBehaviour {
 
     public virtual void Recover() {}
 
-    public virtual AttackAction PickEnemyAttack() { return GetAction(0); }
+    public virtual CharacterAction PickEnemyAttack() { return GetAction(0); }
 }

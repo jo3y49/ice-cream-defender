@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public abstract class WorldManager : MonoBehaviour {
+public class WorldManager : MonoBehaviour {
     [SerializeField] protected GameObject battleUI;
     // [SerializeField] protected DialogManager dialogManager;
     protected GameDataManager gameManager;
@@ -15,13 +15,15 @@ public abstract class WorldManager : MonoBehaviour {
     protected virtual void Start() {
         gameManager = GameDataManager.instance;
 
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        gameManager.SetCurrentScene(currentScene);
+        // int currentScene = SceneManager.GetActiveScene().buildIndex;
+        // gameManager.SetCurrentScene(currentScene);
 
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager.SetPlayer(player);
         playerBattle = player.GetComponent<PlayerBattle>();
         playerMovement = player.GetComponent<PlayerMovement>();
+
+        StartCoroutine(WaitToBattle());
     }
 
     public virtual List<EnemyBattle> GetBattleEnemies() 
@@ -33,8 +35,9 @@ public abstract class WorldManager : MonoBehaviour {
     {
         if (battleUI.activeSelf) return;
 
-        foreach (EnemyBattle e in enemies)
+        foreach (EnemyBattle e in FindObjectsOfType<EnemyBattle>())
         {
+            enemies.Add(e);
             e.PrepareCombat();  
         }
 
@@ -43,7 +46,10 @@ public abstract class WorldManager : MonoBehaviour {
         StartBattle();
     }
 
-    public virtual void WinBattle(){}
+    public virtual void WinBattle()
+    {
+        enemies.Clear();
+    }
 
     public virtual void LoseBattle()
     {
@@ -76,4 +82,11 @@ public abstract class WorldManager : MonoBehaviour {
     }
 
     public PlayerBattle GetPlayer() { return playerBattle; }
+
+    private IEnumerator WaitToBattle()
+    {
+        yield return new WaitForSeconds(1);
+
+        EncounterEnemy();
+    }
 }

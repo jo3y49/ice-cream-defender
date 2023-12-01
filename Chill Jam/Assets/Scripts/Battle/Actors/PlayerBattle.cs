@@ -8,15 +8,7 @@ public class PlayerBattle : CharacterBattle {
     protected override void Start() {
         base.Start();
 
-        CharacterName = "Leoh";
-
-        attackKeys.Add("physical");
-        attackKeys.Add("ranged");
-        attackKeys.Add("heal");
-
-        attackActions.Add(AttackList.GetInstance().GetAction(attackKeys[0]));
-        attackActions.Add(AttackList.GetInstance().GetAction(attackKeys[1]));
-        attackActions.Add(AttackList.GetInstance().GetAction(attackKeys[2]));
+        CharacterName = "Player";
     }
 
     public override void PrepareCombat()

@@ -6,6 +6,7 @@ public class EnemyBattle : CharacterBattle {
     protected WorldManager worldManager;
     protected GameObject player;
     protected bool isAttacking;
+    [SerializeField] private EnemyInfo enemyInfo;
 
     protected override void Start()
     {
@@ -19,6 +20,20 @@ public class EnemyBattle : CharacterBattle {
     // {
     //     SetStats();
     // }
+
+    public bool DoAction()
+    {
+        if (enemyInfo.distance >= 5)
+        {
+            enemyInfo.NextTurn();
+            return false;
+        }
+            
+        else 
+        {
+            return true;
+        }
+    }
 
     public void ResetFromFight()
     {

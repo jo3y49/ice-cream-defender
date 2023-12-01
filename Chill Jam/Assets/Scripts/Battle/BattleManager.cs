@@ -16,7 +16,7 @@ public class BattleManager : MonoBehaviour {
     private PlayerBattle player;
     private Queue<CharacterBattle> turnOrder = new();
     public CharacterBattle characterToAttack;
-    public AttackAction activeCharacterAttack;
+    public CharacterAction activeCharacterAttack;
     private Coroutine battleLoop;
 
     // tracker variables
@@ -82,7 +82,7 @@ public class BattleManager : MonoBehaviour {
 
                 // standard action
                 // do the attack and save whether it hit or not
-                bool hit = Attack(activeCharacter, activeCharacterAttack);
+                PlayerAttack(activeCharacter, activeCharacterAttack);
                     
                 // wait for the attack animation to play
                 while (activeCharacter.GetIsAttacking())
@@ -94,15 +94,8 @@ public class BattleManager : MonoBehaviour {
                 // attacked character resets
                 characterToAttack.Recover();
 
-                // handles a miss
-                if (!hit)
-                {
-                    battleUIManager.SetText($"{activeCharacter.CharacterName} missed");
-                    break;
-                }
-
                 // update enemy's health ui
-                battleUIManager.UpdateHealth();
+                // battleUIManager.UpdateHealth();
 
                 // handle enemy's death
                 if (characterToAttack.health <= 0)
@@ -110,34 +103,14 @@ public class BattleManager : MonoBehaviour {
                     DefeatedEnemy();
                 }
             } else {
-                // set enemy combo
-                activeCharacterAttack = (activeCharacter as EnemyBattle).PickEnemyAttack();
-
                 // enemy targets the player
                 characterToAttack = player;
 
                 // do the attack and save whether it hit or not
-                bool hit = Attack(activeCharacter, activeCharacterAttack);
-                    
-                // wait for the attack animation to play
-                while (activeCharacter.GetIsAttacking())
-                {
-                    
-                    yield return null;
-                }
-
-                // attacked character resets
-                characterToAttack.Recover();
-
-                // handles a miss
-                if (!hit)
-                {
-                    battleUIManager.SetText($"{activeCharacter.CharacterName} missed");
-                    break;
-                }
+                EnemyAttack((EnemyBattle)activeCharacter);
 
                 // updates player's health
-                battleUIManager.UpdateHealth();
+                // battleUIManager.UpdateHealth();
 
                 // lose battle if player dies
                 if (characterToAttack.health <= 0)
@@ -171,18 +144,17 @@ public class BattleManager : MonoBehaviour {
         activeCharacterAttack = null;
     }
 
-    public void Escape()
+    private void PlayerAttack(CharacterBattle activeCharacter, CharacterAction comboAction)
     {
-        StopCoroutine(battleLoop);
-        worldManager.EscapeBattle();
-        EndBattle();
+        activeCharacter.DoAction(comboAction, characterToAttack);
     }
 
-    private bool Attack(CharacterBattle activeCharacter, AttackAction comboAction)
+    private void EnemyAttack(EnemyBattle activeCharacter)
     {
-        battleUIManager.SetText($"{activeCharacter.CharacterName} used {comboAction.Name} at {characterToAttack.CharacterName}");
+        bool attacking = activeCharacter.DoAction();
 
-        return activeCharacter.DoAction(comboAction, characterToAttack);
+        if (attacking)
+            PlayerAttack(activeCharacter, activeCharacter.GetAction(0));
     }
 
     private void DefeatedEnemy()
@@ -211,11 +183,10 @@ public class BattleManager : MonoBehaviour {
         activeCharacterAttack = enemy.PickEnemyAttack();
     }
 
-    public void SetAttackAction(CharacterBattle characterToAttack, AttackAction activeCharacterCombo, Element element = null)
+    public void SetPlayerAction(CharacterBattle characterToAttack, CharacterAction activeCharacterAttack)
     {
         this.characterToAttack = characterToAttack;
-        this.activeCharacterAttack = activeCharacterCombo;
-        this.element = element;
+        this.activeCharacterAttack = activeCharacterAttack;
         awaitCommand = false;
     }
 
@@ -239,17 +210,7 @@ public class BattleManager : MonoBehaviour {
     {
         StopCoroutine(battleLoop);
 
-        battleUIManager.SetText("You won!");
-
-        int currentLevel = player.level;
-
         yield return new WaitForSeconds(dialogueDisplayTime);
-
-        if (player.level > currentLevel)
-        {
-            battleUIManager.SetText("Level up! You are now level " + player.level);
-            yield return new WaitForSeconds(dialogueDisplayTime);
-        }
 
         foreach (EnemyBattle e in enemies)
         {
@@ -264,8 +225,6 @@ public class BattleManager : MonoBehaviour {
     private IEnumerator LoseBattle()
     {
         StopCoroutine(battleLoop);
-
-        battleUIManager.SetText("You were defeated!");
 
         yield return new WaitForSeconds(dialogueDisplayTime);
 

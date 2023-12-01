@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5256324326347649697}
   - component: {fileID: 4632155104684606569}
   - component: {fileID: 6822786970716077783}
+  - component: {fileID: 8375182454359497210}
   - component: {fileID: 7113688701200873565}
   - component: {fileID: 2884541118432212556}
   - component: {fileID: 7279200151872187989}
@@ -78,7 +79,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: -2413806693520163455, guid: ebe73ca9363db456bacf42c025bb4847, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -102,14 +103,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAnimation: {fileID: 7113688701200873565}
-  maxHealth: 0
-  health: 0
-  attack: 0
+  maxHealth: 30
+  health: 30
+  attack: 10
   defense: 0
-  accuracy: 0
-  evasion: 0
   hitTarget: 0
   attackClip: {fileID: 0}
+  enemyInfo: {fileID: 8375182454359497210}
+--- !u!114 &8375182454359497210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3998067529695172208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7bbc358b78602d43be5b249c47d09d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnCount: 0
+  path: {fileID: 0}
+  distance: 100
 --- !u!114 &7113688701200873565
 MonoBehaviour:
   m_ObjectHideFlags: 0
