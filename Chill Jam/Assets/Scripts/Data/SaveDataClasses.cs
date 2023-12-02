@@ -4,7 +4,7 @@ using System.Linq;
 [System.Serializable]
 public class PlayerData
 {
-    public int level = 1;
+    
 }
 
 [System.Serializable]

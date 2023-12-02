@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class GameDataManager : MonoBehaviour {
@@ -18,11 +19,6 @@ public class GameDataManager : MonoBehaviour {
     public void SetPlayer(GameObject player)
     {
         this.player = player;
-    }
-
-    public void SetPlayerLevel(int level)
-    {
-        gameData.playerData.level = level;
     }
 
     public void SetCurrentScene(int sceneIndex)

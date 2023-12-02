@@ -1,6 +1,6 @@
 [System.Serializable]
 public class ItemQuantity
 {
-    public InventoryItem item;
+    public Placeable item;
     public int quantity = 1;
 }

@@ -9,14 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 11bb5b5391b3ed64caa9bd56979ca45b, type: 3}
-  m_Name: Recipe
+  m_Script: {fileID: 11500000, guid: c7bbc358b78602d43be5b249c47d09d7, type: 3}
+  m_Name: Enemy
   m_EditorClassIdentifier: 
-  result:
-    item: {fileID: 0}
-    quantity: 1
-  ingredients:
-  - item: {fileID: 0}
-    quantity: 0
-  - item: {fileID: 0}
-    quantity: 0
+  sprite: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  rarity: 0
+  speed: 1.59
+  size: 1
+  coins: 0

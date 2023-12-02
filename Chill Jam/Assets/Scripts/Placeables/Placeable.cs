@@ -1,5 +1,5 @@
 using UnityEngine;
-public abstract class InventoryItem : ScriptableObject {
+public abstract class Placeable : ScriptableObject {
     public Sprite sprite;
     public int price;
 }

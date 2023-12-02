@@ -4,89 +4,56 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class WorldManager : MonoBehaviour {
-    [SerializeField] protected GameObject battleUI;
-    // [SerializeField] protected DialogManager dialogManager;
+    [SerializeField] private Path[] paths;
+    [SerializeField] private EnemyData[] enemies;
     protected GameDataManager gameManager;
     protected GameObject player;
-    protected PlayerBattle playerBattle;
-    protected PlayerMovement playerMovement;
-    protected List<EnemyBattle> enemies = new();
+
+    public float timeBetweenSpawns = 1;
+
+    private int wave = 1;
 
     protected virtual void Start() {
         gameManager = GameDataManager.instance;
 
-        // int currentScene = SceneManager.GetActiveScene().buildIndex;
-        // gameManager.SetCurrentScene(currentScene);
-
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager.SetPlayer(player);
-        playerBattle = player.GetComponent<PlayerBattle>();
-        playerMovement = player.GetComponent<PlayerMovement>();
 
-        StartCoroutine(WaitToBattle());
+        enemies = Resources.LoadAll<EnemyData>("Enemies");
+
+        StartWave();
+
+
     }
 
-    public virtual List<EnemyBattle> GetBattleEnemies() 
+    public void StartWave()
     {
-        return enemies;
+        int common = 10 + (int)Mathf.Pow(wave, 2);
+
+        int perPath = common / paths.Length;
+
+        StartCoroutine(SpawnEnemies(perPath));
     }
 
-    public virtual void EncounterEnemy()
+    private IEnumerator SpawnEnemies(int perPath)
     {
-        if (battleUI.activeSelf) return;
+        EnemyData enemy = enemies[0];
 
-        foreach (EnemyBattle e in FindObjectsOfType<EnemyBattle>())
+        for (int i = 0; i < perPath; i++)
         {
-            enemies.Add(e);
-            e.PrepareCombat();  
+            Debug.Log("spawning");
+
+            foreach (Path path in paths)
+            {
+                path.SpawnEnemy(enemy);
+            }
+
+            yield return new WaitForSeconds(timeBetweenSpawns);
         }
-
-        // enemies.Reverse();
-
-        StartBattle();
     }
 
-    public virtual void WinBattle()
+    public void EndWave()
     {
-        enemies.Clear();
-    }
-
-    public virtual void LoseBattle()
-    {
-        SceneManager.LoadScene("Title Screen");
-    }
-
-    public virtual void EscapeBattle(){}
-
-    // protected virtual IEnumerator DoDialog(DialogObject dialogObject)
-    // {
-    //     playerMovement.enabled = false;
-
-    //     dialogManager.enabled = true;
-        
-    //     // Start the next dialog.
-    //     dialogManager.DisplayDialog(dialogObject);
-
-    //     // Wait for this dialog to finish before proceeding to the next one.
-    //     yield return new WaitUntil(() => !dialogManager.ShowingDialog());
-        
-    //     dialogManager.enabled = false;
-
-    //     playerMovement.enabled = true;
-    // }
-
-    protected virtual void StartBattle() 
-    {
-        playerBattle.PrepareCombat();
-        battleUI.SetActive(true);
-    }
-
-    public PlayerBattle GetPlayer() { return playerBattle; }
-
-    private IEnumerator WaitToBattle()
-    {
-        yield return new WaitForSeconds(1);
-
-        EncounterEnemy();
+        wave++;
     }
 }
