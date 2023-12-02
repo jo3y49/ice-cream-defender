@@ -41,8 +41,6 @@ public class WorldManager : MonoBehaviour {
 
         for (int i = 0; i < perPath; i++)
         {
-            Debug.Log("spawning");
-
             foreach (Path path in paths)
             {
                 path.SpawnEnemy(enemy);

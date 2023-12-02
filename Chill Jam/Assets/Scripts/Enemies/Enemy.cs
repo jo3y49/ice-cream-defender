@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour {
 
     public void Initialize(EnemyData enemyData, int direction)
     {
-        Debug.Log("Spawned");
         sr.sprite = enemyData.sprite;
         rb.velocity = direction * enemyData.speed * Vector2.right;
     }
