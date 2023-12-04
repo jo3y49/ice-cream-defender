@@ -37,7 +37,7 @@ public class TitleManager : MonoBehaviour {
 
     private void EnterGame(GameData gameData, int sceneIndex)
     {
-        GameDataManager.instance.InitializeGameData(gameData);
+        GameDataManager.Instance.InitializeGameData(gameData);
 
         SceneManager.LoadScene(sceneIndex);
     }

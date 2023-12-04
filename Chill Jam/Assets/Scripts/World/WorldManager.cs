@@ -4,54 +4,133 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class WorldManager : MonoBehaviour {
-    [SerializeField] private Path[] paths;
-    [SerializeField] private EnemyData[] enemies;
+    public static WorldManager Instance {get; private set;}
+    [SerializeField] private Transform[] leftSpawns;
+    [SerializeField] private Transform[] rightSpawns;
+    private List<EnemyData> commonEnemies = new();
+    private List<EnemyData> uncommonEnemies = new();
+    private List<EnemyData> rareEnemies = new();
+    private List<EnemyData> ultrarareEnemies = new(); 
+    [SerializeField] private GameObject enemyPrefab;
     protected GameDataManager gameManager;
     protected GameObject player;
 
     public float timeBetweenSpawns = 1;
 
     private int wave = 1;
+    private Queue<EnemyData> waveEnemies = new();
+    private List<GameObject> liveEnemies = new();
+
+    private void Awake() {
+        Instance = this;
+    }
 
     protected virtual void Start() {
-        gameManager = GameDataManager.instance;
+        gameManager = GameDataManager.Instance;
 
         player = GameObject.FindGameObjectWithTag("Player");
         gameManager.SetPlayer(player);
 
-        enemies = Resources.LoadAll<EnemyData>("Enemies");
+        SortEnemies();
 
-        StartWave();
-
-
+        // StartWave(wave);
     }
 
-    public void StartWave()
+    private void SortEnemies()
     {
-        int common = 10 + (int)Mathf.Pow(wave, 2);
+        EnemyData[] enemies = Resources.LoadAll<EnemyData>("Enemies");
 
-        int perPath = common / paths.Length;
+        foreach (EnemyData e in enemies)
+        {
+            switch (e.rarity)
+            {
+                case EnemyData.Rarity.Common:
+                    commonEnemies.Add(e);
+                    break;
+                case EnemyData.Rarity.Uncommon:
+                    uncommonEnemies.Add(e);
+                    break;
+                case EnemyData.Rarity.Rare:
+                    rareEnemies.Add(e);
+                    break;
+                case EnemyData.Rarity.UltraRare:
+                    ultrarareEnemies.Add(e);
+                    break;
+            }
+        }
+    }
+
+    private void StartWave(int wave)
+    {
+        int common = 16 + (int)Mathf.Pow(wave, 2);
+
+        int perPath = common / (leftSpawns.Length + rightSpawns.Length);
+
+        EnemyData commonEnemy = commonEnemies[0];
+
+        for (int i = 0; i < common; i++)
+        {
+            waveEnemies.Enqueue(commonEnemy);
+        }
 
         StartCoroutine(SpawnEnemies(perPath));
     }
 
+    private void FillWave()
+    {
+        
+    }
+
     private IEnumerator SpawnEnemies(int perPath)
     {
-        EnemyData enemy = enemies[0];
-
         for (int i = 0; i < perPath; i++)
         {
-            foreach (Path path in paths)
+            foreach (Transform spawn in leftSpawns)
             {
-                path.SpawnEnemy(enemy);
+                SpawnEnemy(spawn, true);
+            }
+            foreach (Transform spawn in rightSpawns)
+            {
+                SpawnEnemy(spawn, false);
             }
 
             yield return new WaitForSeconds(timeBetweenSpawns);
         }
+
+        StartCoroutine(WaitForEnd());
     }
 
-    public void EndWave()
+    private void SpawnEnemy(Transform spawn, bool moveRight)
     {
-        wave++;
+        EnemyData nextEnemy = waveEnemies.Peek();
+        GameObject enemyObject = Instantiate(enemyPrefab, spawn);
+
+        liveEnemies.Add(enemyObject);
+        // enemyObject.transform.position = ;
+        enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, moveRight);
+
+        
+        waveEnemies.Dequeue();
+    }
+
+    private IEnumerator WaitForEnd()
+    {
+        yield return new WaitUntil(() => liveEnemies.Count == 0);
+
+        EndWave();
+    }
+
+    public void DefeatedEnemy(GameObject enemy, int coins)
+    {
+        GameDataManager.Instance.AddCoins(coins);
+
+        liveEnemies.Remove(enemy);
+
+        Destroy(enemy);
+    }
+
+    private void EndWave()
+    {
+        StartWave(++wave);
     }
 }

@@ -5,22 +5,53 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Rigidbody2D rb;
+    private EnemyData enemyData;
+    public int health = 1;
+    public float speed = 1;
+    public int coins = 1;
 
     private void Start() {
         
     }
 
-    public void Initialize(EnemyData enemyData, int direction)
+    public void Initialize(EnemyData enemyData, bool moveRight)
     {
+        
         sr.sprite = enemyData.sprite;
-        rb.velocity = direction * enemyData.speed * Vector2.right;
+        health = enemyData.health;
+        speed = enemyData.speed;
+        coins = enemyData.coins;
+        
+        if (!moveRight) 
+        {
+            sr.flipX = true;
+            speed = -speed;
+        }
+
+        rb.velocity = speed * Vector2.right;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Bullet"))
+        {
+            Bullet bullet = other.GetComponent<Bullet>();
+
+            health -= bullet.damage;
+            bullet.Contact();
+
+            if (health <= 0) Death(coins);
+        }
+
+        else if (other.CompareTag("Player"))
         {
             other.GetComponent<Player>().Hit();
-            Destroy(gameObject);
+            Death(0);
         }
+    }
+
+    private void Death(int c)
+    {
+        WorldManager.Instance.DefeatedEnemy(gameObject, c);
     }
 }

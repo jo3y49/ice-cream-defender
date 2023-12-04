@@ -12,6 +12,7 @@ public class EnemyData : ScriptableObject {
 
     public Sprite sprite;
     public Rarity rarity;
+    public int health = 1;
     
     [Range(.1f, 5)]
     public float speed = .5f;

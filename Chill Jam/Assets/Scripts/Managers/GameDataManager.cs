@@ -2,7 +2,7 @@ using System.Linq;
 using UnityEngine;
 
 public class GameDataManager : MonoBehaviour {
-    public static GameDataManager instance;
+    public static GameDataManager Instance;
     private GameData gameData;
     private GameObject player;
 
@@ -21,16 +21,22 @@ public class GameDataManager : MonoBehaviour {
         this.player = player;
     }
 
-    public void SetCurrentScene(int sceneIndex)
+    public void AddCoins(int coins)
     {
-        gameData.worldData.currentScene = sceneIndex;
+        gameData.playerData.coins += coins;
+    }
+
+    public int GetCoins()
+    {
+        return gameData.playerData.coins;
     }
 
     private void Awake() {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
+            gameData = new GameData();
         }
         else
         {

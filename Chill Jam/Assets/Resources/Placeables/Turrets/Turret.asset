@@ -9,12 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7bbc358b78602d43be5b249c47d09d7, type: 3}
-  m_Name: Enemy
+  m_Script: {fileID: 11500000, guid: e9d5e9ac150669d44b7874545aee9bac, type: 3}
+  m_Name: Turret
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 575a9a03b0d054144b62c052a4420a14, type: 3}
-  rarity: 0
-  health: 1
-  speed: 2.6
-  size: 1
-  coins: 0
+  sprite: {fileID: 0}
+  price: 0
+  damage: 50

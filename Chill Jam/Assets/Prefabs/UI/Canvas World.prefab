@@ -125,4 +125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aed2505d6e59b0e47b5be67bb7eb0a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  battleUI: {fileID: 0}
+  leftSpawns: []
+  rightSpawns: []
+  enemyPrefab: {fileID: 2488829967602206081, guid: 0d42ddd20a5902f47a16f0213cdcb41c, type: 3}
+  timeBetweenSpawns: 1
+  coins: 0

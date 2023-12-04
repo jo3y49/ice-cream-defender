@@ -1,6 +1,7 @@
 using UnityEngine;
 
-public class Trap : Placeable {
+public class Turret : Placeable
+{
     protected override void Attack()
     {
         throw new System.NotImplementedException();
