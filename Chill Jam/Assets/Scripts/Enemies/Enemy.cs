@@ -35,15 +35,11 @@ public class Enemy : MonoBehaviour {
         
     }
     
-    private void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Bullet"))
+    private void OnCollisionEnter2D(Collision2D other) 
+    {
+        if (other.gameObject.CompareTag("Placeable"))
         {
-            Bullet bullet = other.gameObject.GetComponent<Bullet>();
-
-            health -= bullet.damage;
-            bullet.Contact();
-
-            if (health <= 0) Death(coins);
+            other.gameObject.GetComponent<Placeable>().EnemyTouch(this);
         }
 
         else if (other.gameObject.CompareTag("Player"))
@@ -51,6 +47,17 @@ public class Enemy : MonoBehaviour {
             other.gameObject.GetComponent<Player>().Hit();
             Death(0);
         }
+    }
+
+    public void Shot(int damage)
+    {
+        health -= damage;
+        if (health <= 0) Death(coins);
+    }
+
+    public void Kill()
+    {
+        Death(coins);
     }
 
     private void Death(int c)

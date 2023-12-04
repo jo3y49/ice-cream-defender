@@ -4,7 +4,8 @@ using System.Linq;
 [System.Serializable]
 public class PlayerData
 {
-    public int coins = 0;
+    public int lives = 5;
+    public int coins = 200;
 }
 
 [System.Serializable]

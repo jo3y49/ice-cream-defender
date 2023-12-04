@@ -10,6 +10,9 @@ public class Pool : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
+
+        NewObject(enemyPrefab, enemies, 50);
+        NewObject(bulletPrefab, bullets, 50);
     }
 
     public GameObject GetBullet()
@@ -30,14 +33,6 @@ public class Pool : MonoBehaviour {
         }
 
         return enemies.Dequeue();
-    }
-
-    public void AddEnemies(int count = 1)
-    {
-        int newEnemies = count - enemies.Count;
-
-        if (newEnemies > 0)
-            NewObject(enemyPrefab, enemies, newEnemies);
     }
 
     private void NewObject(GameObject prefab, Queue<GameObject> queue, int count = 1)

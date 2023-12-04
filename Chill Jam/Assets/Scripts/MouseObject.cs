@@ -14,7 +14,7 @@ public class MouseObject : MonoBehaviour {
         Instance = this;
 
         itemObject = Instantiate(itemOnMousePrefab);
-        TryGetComponent(out itemObjectRenderer); 
+        itemObject.TryGetComponent(out itemObjectRenderer); 
 
         itemObject.SetActive(false);
     }
@@ -29,7 +29,7 @@ public class MouseObject : MonoBehaviour {
     private IEnumerator StickingToMouse(PlaceableData item)
     {
         itemObject.SetActive(true);
-        if (item.sprite != null) itemObjectRenderer.sprite = item.sprite;
+        if (itemObjectRenderer != null) itemObjectRenderer.sprite = item.sprite;
 
         selectedItem = item;
 

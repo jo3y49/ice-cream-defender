@@ -145,5 +145,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3c69c9b29799a348a910971e2270e9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turret: {fileID: 8788647073674248554, guid: 0e3c32921345bb244bd3382da69e8e14, type: 3}
-  trap: {fileID: 9126907699451331138, guid: d96af5a6df8eff145b34dee235f7032a, type: 3}
+  image: {fileID: 3135173039482173280}
+  turretPrefab: {fileID: 3159014980479600666, guid: c13ea7603b5331242a259cdd044e0191, type: 3}
+  trapPrefab: {fileID: 2058716870053640383, guid: ae2991199460a0d4da1ce8246c5302a9, type: 3}

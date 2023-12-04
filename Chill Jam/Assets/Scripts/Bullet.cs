@@ -11,7 +11,15 @@ public class Bullet : MonoBehaviour {
         rb.velocity = velocity;
     }
 
-    public void Contact()
+    private void OnTriggerEnter2D(Collider2D other) {
+        if (other.CompareTag("Enemy"))
+        {
+            other.GetComponent<Enemy>().Shot(damage);
+            Contact();
+        }
+    }
+
+    private void Contact()
     {
         Pool.Instance.ReturnBullet(gameObject);
     }

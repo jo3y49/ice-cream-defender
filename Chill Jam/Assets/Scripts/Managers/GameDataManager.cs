@@ -21,6 +21,16 @@ public class GameDataManager : MonoBehaviour {
         this.player = player;
     }
 
+    public void LoseLife(int lives = 1)
+    {
+        gameData.playerData.lives -= lives;
+    }
+
+    public int GetLives()
+    {
+        return gameData.playerData.lives;
+    }
+
     public void AddCoins(int coins)
     {
         gameData.playerData.coins += coins;

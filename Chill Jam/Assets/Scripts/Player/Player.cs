@@ -1,13 +1,11 @@
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    public int lives = 5;
-
     public void Hit()
     {
-        lives--;
+        GameDataManager.Instance.LoseLife();
 
-        if (lives <= 0)
+        if (GameDataManager.Instance.GetLives() <= 0)
         {
             Destroy(gameObject);
         }

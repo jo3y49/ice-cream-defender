@@ -1,42 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class WorldManager : MonoBehaviour {
     public static WorldManager Instance {get; private set;}
     [SerializeField] private UIManager uiManager;
     [SerializeField] private Transform[] leftSpawns;
     [SerializeField] private Transform[] rightSpawns;
+    [SerializeField] private GameObject waveButton;
     private List<EnemyData> commonEnemies = new();
     private List<EnemyData> uncommonEnemies = new();
     private List<EnemyData> rareEnemies = new();
     private List<EnemyData> ultrarareEnemies = new(); 
-    [SerializeField] private GameObject enemyPrefab;
-    protected GameDataManager gameManager;
-    protected GameObject player;
 
     public float timeBetweenSpawns = 1;
     public float waveDelay = 2;
     public float waveCoinRewardMultiplier = 100;
 
     private int wave = 1;
-    private Queue<EnemyData> waveEnemies = new();
+    private List<EnemyData> waveEnemies = new();
     private List<GameObject> liveEnemies = new();
 
     private void Awake() {
         Instance = this;
-    }
-
-    protected virtual void Start() {
-        gameManager = GameDataManager.Instance;
-
-        player = GameObject.FindGameObjectWithTag("Player");
-        gameManager.SetPlayer(player);
 
         SortEnemies();
 
-        StartWave(wave);
+        uiManager.SetWave(wave);
+
+        waveButton.SetActive(true);
+        waveButton.GetComponent<Button>().onClick.AddListener(PlayerReady);
     }
 
     private void SortEnemies()
@@ -63,67 +59,71 @@ public class WorldManager : MonoBehaviour {
         }
     }
 
+    private void PlayerReady()
+    {
+        StartWave(wave);
+
+        waveButton.SetActive(false);
+    }
+
     private void StartWave(int wave)
     {
         int common = 16 + (int)Mathf.Pow(wave, 2);
+        int uncommon = 4 + (int)Mathf.Pow(wave, 1.1f);
+        int total = common + uncommon;
 
-        int perPath = common / (leftSpawns.Length + rightSpawns.Length);
+        int uncommonGap = common/uncommon;
 
         EnemyData commonEnemy = commonEnemies[0];
+        EnemyData uncommonEnemy = uncommonEnemies[0];
 
-        for (int i = 0; i < common; i++)
+        for (int i = 1; i <= total; i++)
         {
-            waveEnemies.Enqueue(commonEnemy);
+            if (i % uncommonGap == 0)
+                waveEnemies.Add(uncommonEnemy);
+            else
+                waveEnemies.Add(commonEnemy);
         }
+
+        int perPath = (int)(waveEnemies.Count / (float)(leftSpawns.Length + rightSpawns.Length));
 
         StartCoroutine(SpawnEnemies(perPath));
     }
 
-    private void FillWave()
-    {
-        
-    }
-
     private IEnumerator SpawnEnemies(int perPath)
     {
-        uiManager.SetWave(wave);
-
-        Pool.Instance.AddEnemies(waveEnemies.Count);
-
         yield return new WaitForSeconds(waveDelay);
 
         for (int i = 0; i < perPath; i++)
         {
             foreach (Transform spawn in leftSpawns)
             {
-                SpawnEnemy(spawn, true);
-            }
-            foreach (Transform spawn in rightSpawns)
-            {
-                SpawnEnemy(spawn, false);
+                SpawnEnemy(spawn, waveEnemies[0], true);
+
+                yield return new WaitForSeconds(timeBetweenSpawns);
             }
 
-            yield return new WaitForSeconds(timeBetweenSpawns);
+            foreach (Transform spawn in rightSpawns)
+            {
+                SpawnEnemy(spawn, waveEnemies[0], false);
+                
+                yield return new WaitForSeconds(timeBetweenSpawns);
+            }
         }
 
         StartCoroutine(WaitForEnd());
     }
 
-    private void SpawnEnemy(Transform spawn, bool moveRight)
+    private void SpawnEnemy(Transform spawn, EnemyData nextEnemy, bool moveRight)
     {
-        EnemyData nextEnemy = waveEnemies.Peek();
+        waveEnemies.Remove(nextEnemy);
+
         GameObject enemyObject = Pool.Instance.GetEnemy();
         enemyObject.transform.position = spawn.transform.position;
         enemyObject.SetActive(true);
         enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, moveRight);
         
-
         liveEnemies.Add(enemyObject);
-        // enemyObject.transform.position = ;
-        
-
-        
-        waveEnemies.Dequeue();
     }
 
     private IEnumerator WaitForEnd()
@@ -146,6 +146,10 @@ public class WorldManager : MonoBehaviour {
     {
         GameDataManager.Instance.AddCoins((int)(wave * waveCoinRewardMultiplier));
 
-        StartWave(++wave);
+        wave++;
+
+        uiManager.SetWave(wave);
+
+        waveButton.SetActive(true);
     }
 }

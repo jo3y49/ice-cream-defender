@@ -55,4 +55,9 @@ public class Turret : Placeable
             yield return new WaitForSeconds(fireRate);
         }
     }
+
+    public override void EnemyTouch(Enemy enemy)
+    {
+        base.EnemyTouch(enemy);
+    }
 }
