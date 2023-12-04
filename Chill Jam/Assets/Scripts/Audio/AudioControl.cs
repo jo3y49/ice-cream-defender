@@ -6,6 +6,8 @@ public class AudioControl : MonoBehaviour {
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip initial, loop;
 
+    public bool initialTrack = false;
+
     private float audioTime = 0;
     private bool pause = false;
     private bool initialPause = false;
@@ -15,13 +17,24 @@ public class AudioControl : MonoBehaviour {
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            audioSource.loop = false;
-            audioSource.clip = initial;
-            audioSource.Play();
 
             PauseManager.PauseEvent += PauseAudio;
 
-            StartCoroutine(WaitForLoop());
+            if (initialTrack)
+            {
+                audioSource.loop = false;
+                audioSource.clip = initial;
+                audioSource.Play();
+
+                
+
+                StartCoroutine(WaitForLoop());
+            } else
+            {
+                PlayLoop();
+            }
+            
+            
         }
         else 
         {
@@ -74,12 +87,17 @@ public class AudioControl : MonoBehaviour {
             
         } else
         {
-            audioSource.loop = true;
-            audioSource.clip = loop;
-            audioTime = 0;
-            audioSource.time = 0;
-            audioSource.Play();
+            PlayLoop();
         }
+    }
+
+    private void PlayLoop()
+    {
+        audioSource.loop = true;
+        audioSource.clip = loop;
+        audioTime = 0;
+        audioSource.time = 0;
+        audioSource.Play();
     }
 
     private IEnumerator WaitToResume()
