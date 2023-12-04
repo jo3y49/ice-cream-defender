@@ -15,6 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 0}
   price: 0
   damage: 50
-  timeBetweenBullets: 0.05
+  fireRate: 1
   bulletSpeed: 10
   range: 15

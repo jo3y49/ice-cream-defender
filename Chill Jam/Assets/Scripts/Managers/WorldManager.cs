@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class WorldManager : MonoBehaviour {
     public static WorldManager Instance {get; private set;}
+    [SerializeField] private UIManager uiManager;
     [SerializeField] private Transform[] leftSpawns;
     [SerializeField] private Transform[] rightSpawns;
     private List<EnemyData> commonEnemies = new();
@@ -17,6 +18,7 @@ public class WorldManager : MonoBehaviour {
 
     public float timeBetweenSpawns = 1;
     public float waveDelay = 2;
+    public float waveCoinRewardMultiplier = 100;
 
     private int wave = 1;
     private Queue<EnemyData> waveEnemies = new();
@@ -84,6 +86,8 @@ public class WorldManager : MonoBehaviour {
 
     private IEnumerator SpawnEnemies(int perPath)
     {
+        uiManager.SetWave(wave);
+
         Pool.Instance.AddEnemies(waveEnemies.Count);
 
         yield return new WaitForSeconds(waveDelay);
@@ -140,6 +144,8 @@ public class WorldManager : MonoBehaviour {
 
     private void EndWave()
     {
+        GameDataManager.Instance.AddCoins((int)(wave * waveCoinRewardMultiplier));
+
         StartWave(++wave);
     }
 }
