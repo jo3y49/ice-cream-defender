@@ -26,16 +26,19 @@ public class Enemy : MonoBehaviour {
         {
             sr.flipX = true;
             speed = -speed;
+        } else 
+        {
+            sr.flipX = false;
         }
 
         rb.velocity = speed * Vector2.right;
         
     }
-
-    private void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Bullet"))
+    
+    private void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Bullet"))
         {
-            Bullet bullet = other.GetComponent<Bullet>();
+            Bullet bullet = other.gameObject.GetComponent<Bullet>();
 
             health -= bullet.damage;
             bullet.Contact();
@@ -43,9 +46,9 @@ public class Enemy : MonoBehaviour {
             if (health <= 0) Death(coins);
         }
 
-        else if (other.CompareTag("Player"))
+        else if (other.gameObject.CompareTag("Player"))
         {
-            other.GetComponent<Player>().Hit();
+            other.gameObject.GetComponent<Player>().Hit();
             Death(0);
         }
     }

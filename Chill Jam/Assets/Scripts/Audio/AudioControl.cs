@@ -26,15 +26,12 @@ public class AudioControl : MonoBehaviour {
                 audioSource.clip = initial;
                 audioSource.Play();
 
-                
-
                 StartCoroutine(WaitForLoop());
-            } else
+            } 
+            else
             {
                 PlayLoop();
             }
-            
-            
         }
         else 
         {

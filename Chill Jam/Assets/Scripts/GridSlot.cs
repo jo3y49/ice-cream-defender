@@ -4,9 +4,11 @@ public class GridSlot : MonoBehaviour {
     [SerializeField] private Turret turret;
     [SerializeField] private Trap trap;
 
+    private Placeable activeItem;
+
     public void Placed()
     {
-        if (!MouseObject.Instance.Sticking) return;
+        if (!MouseObject.Instance.Sticking || activeItem != null) return;
 
         MouseObject.Instance.Placed();
 
@@ -21,8 +23,8 @@ public class GridSlot : MonoBehaviour {
                 return;
         }
 
-        Placeable newItem = Instantiate(item, transform);
-        newItem.Initialize(MouseObject.Instance.selectedItem);
+        activeItem = Instantiate(item, transform);
+        activeItem.Initialize(MouseObject.Instance.selectedItem);
     }
     
 }

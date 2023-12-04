@@ -16,6 +16,7 @@ public class WorldManager : MonoBehaviour {
     protected GameObject player;
 
     public float timeBetweenSpawns = 1;
+    public float waveDelay = 2;
 
     private int wave = 1;
     private Queue<EnemyData> waveEnemies = new();
@@ -33,7 +34,7 @@ public class WorldManager : MonoBehaviour {
 
         SortEnemies();
 
-        // StartWave(wave);
+        StartWave(wave);
     }
 
     private void SortEnemies()
@@ -83,6 +84,10 @@ public class WorldManager : MonoBehaviour {
 
     private IEnumerator SpawnEnemies(int perPath)
     {
+        Pool.Instance.AddEnemies(waveEnemies.Count);
+
+        yield return new WaitForSeconds(waveDelay);
+
         for (int i = 0; i < perPath; i++)
         {
             foreach (Transform spawn in leftSpawns)
@@ -103,11 +108,15 @@ public class WorldManager : MonoBehaviour {
     private void SpawnEnemy(Transform spawn, bool moveRight)
     {
         EnemyData nextEnemy = waveEnemies.Peek();
-        GameObject enemyObject = Instantiate(enemyPrefab, spawn);
+        GameObject enemyObject = Pool.Instance.GetEnemy();
+        enemyObject.transform.position = spawn.transform.position;
+        enemyObject.SetActive(true);
+        enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, moveRight);
+        
 
         liveEnemies.Add(enemyObject);
         // enemyObject.transform.position = ;
-        enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, moveRight);
+        
 
         
         waveEnemies.Dequeue();
@@ -126,7 +135,7 @@ public class WorldManager : MonoBehaviour {
 
         liveEnemies.Remove(enemy);
 
-        Destroy(enemy);
+        Pool.Instance.ReturnEnemy(enemy);
     }
 
     private void EndWave()

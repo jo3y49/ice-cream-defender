@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 990147060571930825}
   - component: {fileID: 8006038627076942391}
   - component: {fileID: 7779669089838194867}
+  - component: {fileID: 1041227348407964455}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: GameController
@@ -155,3 +156,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiSounds: []
+--- !u!114 &1041227348407964455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4012285114571280862}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 051cb78617c3c9d47acd970ef9c725c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 2752042113658812385, guid: 2be6c91bcb088d64aac9a8112fc65d8a, type: 3}
+  enemyPrefab: {fileID: 2488829967602206081, guid: 0d42ddd20a5902f47a16f0213cdcb41c, type: 3}
