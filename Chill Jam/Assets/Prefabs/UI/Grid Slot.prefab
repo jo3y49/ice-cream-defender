@@ -123,7 +123,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3222865985248727697}
         m_TargetAssemblyTypeName: GridSlot, Assembly-CSharp
-        m_MethodName: Placed
+        m_MethodName: SelectGrid
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

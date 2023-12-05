@@ -8,7 +8,7 @@ public class GridSlot : MonoBehaviour {
     private Turret turret;
     private Trap trap;
 
-    private Placeable activeItem;
+    public Placeable activeItem;
 
     private void Start() {
         turret = (Turret)CreateItem(turretPrefab);
@@ -26,23 +26,38 @@ public class GridSlot : MonoBehaviour {
         return item;
     }
 
-    public void Placed()
+    public void SelectGrid()
     {
-        if (!MouseObject.Instance.Sticking || activeItem != null) return;
+        if (!MouseObject.Instance.Sticking)
+        {
+            UIManager.Instance.SetItem(this);
+            return;
+
+        } else if (activeItem != null) return;
 
         MouseObject.Instance.Placed();
 
-        switch (MouseObject.Instance.selectedItem)
+        SetItem(MouseObject.Instance.selectedItem);
+
+        
+    }
+
+    public void SetItem(PlaceableData item)
+    {
+        switch (item)
         {
             case TurretData:
                 activeItem = turret;
+                break;
+            case TrapData:
+                activeItem = trap;
                 break;
             default:
                 return;
         }
 
         activeItem.gameObject.SetActive(true);
-        activeItem.Initialize(MouseObject.Instance.selectedItem);
+        activeItem.Initialize(item);
     }
 
     public void Destroyed()

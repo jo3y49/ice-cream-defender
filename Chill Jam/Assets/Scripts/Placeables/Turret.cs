@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class Turret : Placeable
 {
-    private int direction = 1;
     private float fireRate = 1;
     private float range = 5;
 
@@ -14,7 +13,7 @@ public class Turret : Placeable
 
     protected override void SetWeapon()
     {
-        direction = (int)Mathf.Sign(transform.position.x);
+        int direction = (int)Mathf.Sign(transform.position.x);
 
         sr.flipX = direction < 0;
 
@@ -48,16 +47,11 @@ public class Turret : Placeable
                     GameObject bullet = Pool.Instance.GetBullet();
                     bullet.transform.position = firePoint;
                     bullet.SetActive(true);
-                    bullet.GetComponent<Bullet>().Fire(bulletVelocity);
+                    bullet.GetComponent<Bullet>().Fire(bulletVelocity, data.damage);
                 }
             }
 
             yield return new WaitForSeconds(fireRate);
         }
-    }
-
-    public override void EnemyTouch(Enemy enemy)
-    {
-        base.EnemyTouch(enemy);
     }
 }

@@ -10,11 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9d5e9ac150669d44b7874545aee9bac, type: 3}
-  m_Name: Turret
+  m_Name: Turret 2
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: f15d445ac5df01440a150d818669e90b, type: 3}
-  price: 200
-  damage: 50
-  fireRate: 1
-  bulletSpeed: 10
+  sprite: {fileID: 21300000, guid: 12bfb60a55282014089e5733ba36889c, type: 3}
+  upgrade: {fileID: 0}
+  price: 150
+  damage: 2
+  health: 2
+  fireRate: 3.1
+  bulletSpeed: 12.1
   range: 15

@@ -5,10 +5,10 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Rigidbody2D rb;
-    private EnemyData enemyData;
     public int health = 1;
     public float speed = 1;
     public int coins = 1;
+    public int damage = 1;
 
     private void Start() {
         
@@ -21,6 +21,9 @@ public class Enemy : MonoBehaviour {
         health = enemyData.health;
         speed = enemyData.speed;
         coins = enemyData.coins;
+        damage = enemyData.damage;
+
+        transform.localScale = Vector3.one * enemyData.size;
         
         if (!moveRight) 
         {

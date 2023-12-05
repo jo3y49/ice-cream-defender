@@ -5,12 +5,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class BuyButton : MonoBehaviour {
-    [SerializeField] private Image image;
     [SerializeField] private PlaceableData item;
-
-    private void Awake() {
-        image.sprite = item.sprite;
-    }
 
     public void Transaction()
     {

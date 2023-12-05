@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public abstract class Placeable : MonoBehaviour {
     [SerializeField] protected SpriteRenderer sr;
-    protected PlaceableData data;
+    public PlaceableData data;
+    public int health;
     protected GridSlot gridSlot;
 
     public virtual void SetUp(GridSlot gridSlot)
@@ -17,16 +18,32 @@ public abstract class Placeable : MonoBehaviour {
     {
         this.data = data;
         sr.sprite = data.sprite;
+        health = data.health;
         transform.position = gridSlot.transform.position;
 
         SetWeapon();
+    }
+
+    public virtual void Upgrade()
+    {
+        if (data.upgrade != null)
+        {
+            GameDataManager.Instance.AddCoins(-data.upgrade.price);
+            Initialize(data.upgrade);
+            // gridSlot.SetItem(data.upgrade);
+        }
+            
     }
 
     protected abstract void SetWeapon();
 
     public virtual void EnemyTouch(Enemy enemy)
     {
-        gridSlot.Destroyed();
+        health -= enemy.damage;
+
         enemy.Kill();
+
+        if (health <= 0)
+            gridSlot.Destroyed();
     }
 }
