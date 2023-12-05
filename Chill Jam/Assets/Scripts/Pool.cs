@@ -11,7 +11,7 @@ public class Pool : MonoBehaviour {
     private void Awake() {
         Instance = this;
 
-        NewObject(enemyPrefab, enemies, 50);
+        NewObject(enemyPrefab, enemies, 40);
         NewObject(bulletPrefab, bullets, 50);
     }
 

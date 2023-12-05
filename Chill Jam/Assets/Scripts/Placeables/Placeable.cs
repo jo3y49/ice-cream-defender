@@ -41,8 +41,6 @@ public abstract class Placeable : MonoBehaviour {
     {
         health -= enemy.damage;
 
-        enemy.Kill();
-
         if (health <= 0)
             gridSlot.Destroyed();
     }

@@ -15,7 +15,7 @@ public class Turret : Placeable
     {
         int direction = (int)Mathf.Sign(transform.position.x);
 
-        sr.flipX = direction < 0;
+        sr.flipX = direction >= 0;
 
         bulletDirection = direction * Vector2.right;
 

@@ -51,6 +51,15 @@ public class ItemOptions : MonoBehaviour {
         Selected();
     }
 
+    public void Sell()
+    {
+        GameDataManager.Instance.AddCoins(data.price/2);
+
+        gridSlot.Destroyed();
+
+        Selected();
+    }
+
     private void Selected()
     {
         gridSlot = null;

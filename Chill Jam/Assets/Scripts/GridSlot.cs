@@ -6,14 +6,14 @@ public class GridSlot : MonoBehaviour {
     [SerializeField] private Image image;
     [SerializeField] private GameObject turretPrefab, trapPrefab;
     private Turret turret;
-    private Trap trap;
+    private Wall trap;
 
     public Placeable activeItem;
 
     private void Start() {
         turret = (Turret)CreateItem(turretPrefab);
 
-        trap = (Trap)CreateItem(trapPrefab);
+        trap = (Wall)CreateItem(trapPrefab);
     }
 
     private Placeable CreateItem(GameObject prefab)
@@ -49,7 +49,7 @@ public class GridSlot : MonoBehaviour {
             case TurretData:
                 activeItem = turret;
                 break;
-            case TrapData:
+            case WallData:
                 activeItem = trap;
                 break;
             default:
@@ -62,8 +62,9 @@ public class GridSlot : MonoBehaviour {
 
     public void Destroyed()
     {
+        if (activeItem == null) return;
+
         activeItem.gameObject.SetActive(false);
         activeItem = null;
     }
-    
 }

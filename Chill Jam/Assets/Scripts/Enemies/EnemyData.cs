@@ -4,10 +4,10 @@ using UnityEngine;
 public class EnemyData : ScriptableObject {
     public enum Rarity
     {
-        Common,
-        Uncommon,
-        Rare,
-        UltraRare,
+        Normal,
+        Speedy,
+        Bulky,
+        Boss,
     }
 
     public Sprite sprite;

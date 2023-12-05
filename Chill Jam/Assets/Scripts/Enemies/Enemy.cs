@@ -1,18 +1,17 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(BoxCollider2D))]
 public class Enemy : MonoBehaviour {
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private BoxCollider2D box;
     public int health = 1;
     public float speed = 1;
     public int coins = 1;
     public int damage = 1;
-
-    private void Start() {
-        
-    }
 
     public void Initialize(EnemyData enemyData, bool moveRight)
     {
@@ -23,8 +22,8 @@ public class Enemy : MonoBehaviour {
         coins = enemyData.coins;
         damage = enemyData.damage;
 
-        transform.localScale = Vector3.one * enemyData.size;
-        
+        box.size = 1.6f * enemyData.size * Vector2.one;
+
         if (!moveRight) 
         {
             sr.flipX = true;
@@ -42,7 +41,10 @@ public class Enemy : MonoBehaviour {
     {
         if (other.gameObject.CompareTag("Placeable"))
         {
-            other.gameObject.GetComponent<Placeable>().EnemyTouch(this);
+            Placeable p = other.gameObject.GetComponent<Placeable>();
+            p.EnemyTouch(this);
+            StartCoroutine(WaitToMove(p));
+
         }
 
         else if (other.gameObject.CompareTag("Player"))
@@ -56,6 +58,28 @@ public class Enemy : MonoBehaviour {
     {
         health -= damage;
         if (health <= 0) Death(coins);
+    }
+
+    private IEnumerator WaitToMove(Placeable placeable)
+    {
+        rb.velocity = Vector2.zero;
+
+        float t = 0;
+        while (t < 1)
+        {
+            if (!placeable.gameObject.activeSelf)
+            {
+                rb.velocity = speed * Vector2.right;
+                yield break;
+            }
+                
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        placeable.EnemyTouch(this);
+        StartCoroutine(WaitToMove(placeable));
     }
 
     public void Kill()

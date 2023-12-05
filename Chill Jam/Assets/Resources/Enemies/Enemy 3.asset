@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7bbc358b78602d43be5b249c47d09d7, type: 3}
+  m_Name: Enemy 3
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: fbb0e1830f8405d488d0d6975d73ec8c, type: 3}
+  rarity: 2
+  health: 16
+  damage: 1
+  speed: 0.75
+  size: 1
+  coins: 40

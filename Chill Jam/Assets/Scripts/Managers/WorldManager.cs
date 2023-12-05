@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,14 +13,25 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private Transform[] rightSpawns;
     private float bigY;
     [SerializeField] private GameObject waveButton;
-    private List<EnemyData> commonEnemies = new();
-    private List<EnemyData> uncommonEnemies = new();
-    private List<EnemyData> rareEnemies = new();
-    private List<EnemyData> ultraRareEnemies = new(); 
+    private List<EnemyData> normalEnemies = new();
+    private List<EnemyData> speedyEnemies = new();
+    private List<EnemyData> bulkyEnemies = new();
+    private List<EnemyData> bossEnemies = new(); 
 
     public float timeBetweenSpawns = 1;
     public float waveDelay = 2;
     public float waveCoinRewardMultiplier = 100;
+
+    public int[] normalWaves = {1,3,6,8};
+    public int[] speedyWaves = {2,7};
+    public int[] bulkyWaves = {4,9};
+    public int[] bossWaves = {5,10};
+    public int normalCount = 10;
+    public int speedyCount = 8;
+    public int bulkyCount = 10;
+    public int bossCount = 5;
+
+    public int finalWave = 10;
 
     private int wave = 1;
     private List<EnemyData> waveEnemies = new();
@@ -49,17 +61,17 @@ public class WorldManager : MonoBehaviour {
         {
             switch (e.rarity)
             {
-                case EnemyData.Rarity.Common:
-                    commonEnemies.Add(e);
+                case EnemyData.Rarity.Normal:
+                    normalEnemies.Add(e);
                     break;
-                case EnemyData.Rarity.Uncommon:
-                    uncommonEnemies.Add(e);
+                case EnemyData.Rarity.Speedy:
+                    speedyEnemies.Add(e);
                     break;
-                case EnemyData.Rarity.Rare:
-                    rareEnemies.Add(e);
+                case EnemyData.Rarity.Bulky:
+                    bulkyEnemies.Add(e);
                     break;
-                case EnemyData.Rarity.UltraRare:
-                    ultraRareEnemies.Add(e);
+                case EnemyData.Rarity.Boss:
+                    bossEnemies.Add(e);
                     break;
             }
         }
@@ -74,45 +86,70 @@ public class WorldManager : MonoBehaviour {
 
     private void StartWave(int wave)
     {
-        int common = 16 + (int)Mathf.Pow(wave, 2);
-        int uncommon = 4 + (int)Mathf.Pow(wave, 1.1f);
-        int big = 1;
-        int total = common + uncommon + big;
-
-        int uncommonGap = total/(uncommon+1);
-        int bigGap = total/(big+1);
-
-        int perPath = (int)(total / (float)(leftSpawns.Length + rightSpawns.Length));
-
-        EnemyData commonEnemy = commonEnemies[0];
-        EnemyData uncommonEnemy = uncommonEnemies[0];
-        EnemyData ultraRareEnemy = ultraRareEnemies[0];
-
-        while (waveEnemies.Count <= total)
+        foreach (int i in normalWaves)
         {
-            if ((waveEnemies.Count + 1) % bigGap == 0)
-                waveEnemies.Add(ultraRareEnemy);
-
-            if ((waveEnemies.Count + 1) % uncommonGap == 0)
-                waveEnemies.Add(uncommonEnemy);
-            
-                waveEnemies.Add(commonEnemy);
+            if (i == wave)
+            {
+                SetWave(normalEnemies[0], normalCount);
+                normalCount *= 2;
+                return;
+            }
         }
 
-        StartCoroutine(SpawnEnemies(perPath));
+        foreach (int i in speedyWaves)
+        {
+            if (i == wave)
+            {
+                SetWave(speedyEnemies[0], speedyCount);
+                speedyCount *= 2;
+                return;
+            }
+        }
+
+        foreach (int i in bulkyWaves)
+        {
+            if (i == wave)
+            {
+                SetWave(bulkyEnemies[0], bulkyCount);
+                bulkyCount *= 2;
+                return;
+            }
+        }
+
+        foreach (int i in bossWaves)
+        {
+            if (i == wave)
+            {
+                SetWave(bossEnemies[0], bossCount);
+                bossCount *= 2;
+                return;
+            }
+        }
     }
 
-    private IEnumerator SpawnEnemies(int perPath)
+    private void SetWave(EnemyData enemyData, int total)
+    {
+        while (waveEnemies.Count <= total)
+        {
+            waveEnemies.Add(enemyData);
+        }
+
+        StartCoroutine(SpawnEnemies());
+    }
+
+    private IEnumerator SpawnEnemies()
     {
         yield return new WaitForSeconds(waveDelay);
 
-        for (int i = 0; i < perPath; i++)
+        while (waveEnemies.Count > 0)
         {
             foreach (Transform spawn in leftSpawns)
             {
                 SpawnEnemy(spawn, waveEnemies[0], true);
 
                 yield return new WaitForSeconds(timeBetweenSpawns);
+
+                if (waveEnemies.Count == 0) goto EndLoop;
             }
 
             foreach (Transform spawn in rightSpawns)
@@ -120,8 +157,12 @@ public class WorldManager : MonoBehaviour {
                 SpawnEnemy(spawn, waveEnemies[0], false);
                 
                 yield return new WaitForSeconds(timeBetweenSpawns);
+
+                if (waveEnemies.Count == 0) goto EndLoop;
             }
         }
+
+        EndLoop:
 
         StartCoroutine(WaitForEnd());
     }

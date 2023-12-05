@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Trap : Placeable {
+public class Syrup : Placeable {
 
     protected override void SetWeapon()
     {

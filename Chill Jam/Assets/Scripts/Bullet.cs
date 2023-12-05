@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
@@ -10,6 +11,8 @@ public class Bullet : MonoBehaviour {
     {
         this.damage = damage;
         rb.velocity = velocity;
+
+        StartCoroutine(WaitToHit());
     }
 
     private void OnTriggerEnter2D(Collider2D other) {
@@ -22,6 +25,15 @@ public class Bullet : MonoBehaviour {
 
     private void Contact()
     {
+        StopAllCoroutines();
+        
         Pool.Instance.ReturnBullet(gameObject);
+    }
+
+    private IEnumerator WaitToHit()
+    {
+        yield return new WaitForSeconds(15);
+
+        Contact();
     }
 }

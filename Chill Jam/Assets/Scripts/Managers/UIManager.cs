@@ -9,9 +9,13 @@ public class UIManager : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
+    }
 
+    private void Start() {
         itemMenu.TryGetComponent(out itemOptions);
         itemMenu.SetActive(false);
+        
+        SetLives();
     }
 
     private void Update() {

@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 8575273691934298847}
   - component: {fileID: 4704592939477351743}
   - component: {fileID: 5100820381358082800}
+  - component: {fileID: 3286524271222946865}
   - component: {fileID: 2027395904913745195}
-  - component: {fileID: -6381159549815984764}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -114,24 +114,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2027395904913745195
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2488829967602206081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ce0ac790d4f5e44da362cd50debc8e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sr: {fileID: 4704592939477351743}
-  rb: {fileID: 5100820381358082800}
-  health: 1
-  speed: 1
-  coins: 1
---- !u!61 &-6381159549815984764
+--- !u!61 &3286524271222946865
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -163,7 +146,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.17205226}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -174,5 +157,24 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.6238455, y: 1.5905962}
   m_EdgeRadius: 0
+--- !u!114 &2027395904913745195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2488829967602206081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ce0ac790d4f5e44da362cd50debc8e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sr: {fileID: 4704592939477351743}
+  rb: {fileID: 5100820381358082800}
+  box: {fileID: 3286524271222946865}
+  health: 1
+  speed: 1
+  coins: 1
+  damage: 1
