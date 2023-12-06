@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class ItemOptions : MonoBehaviour {
             return;
         }
 
+        StopAllCoroutines();
         gameObject.SetActive(true);
 
         this.gridSlot = gridSlot;
@@ -24,7 +26,7 @@ public class ItemOptions : MonoBehaviour {
         data = gridSlot.activeItem.data;
         levelText.text = data.level.ToString();
 
-        // itemImage.sprite = data.sprite;
+        itemImage.sprite = data.sprite;
 
         if (data.upgrade != null)
         {
@@ -43,15 +45,11 @@ public class ItemOptions : MonoBehaviour {
             MouseObject.Instance.StickToMouse(data, gridSlot);
             gridSlot.Destroyed();
         }  
-
-        Selected();
     }
 
     public void Upgrade()
     {
         gridSlot.activeItem.Upgrade();
-
-        Selected();
     }
 
     public void Sell()
@@ -59,13 +57,30 @@ public class ItemOptions : MonoBehaviour {
         GameDataManager.Instance.AddCoins(data.price/2);
 
         gridSlot.Destroyed();
-
-        Selected();
     }
 
     private void Selected()
     {
         gridSlot = null;
         gameObject.SetActive(false);
+    }
+
+    private void OnEnable() {
+        StartCoroutine(CheckForClick());
+    }
+
+    private void OnDisable() {
+        StopAllCoroutines();
+    }
+
+    private IEnumerator CheckForClick()
+    {
+        yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
+
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+        yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
+
+        Selected();
     }
 }

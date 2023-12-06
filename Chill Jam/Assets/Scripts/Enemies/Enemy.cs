@@ -42,9 +42,8 @@ public class Enemy : MonoBehaviour {
         if (other.gameObject.CompareTag("Placeable"))
         {
             Placeable p = other.gameObject.GetComponent<Placeable>();
-            p.EnemyTouch(this);
             StartCoroutine(WaitToMove(p));
-
+            p.EnemyTouch(this);
         }
 
         else if (other.gameObject.CompareTag("Player"))

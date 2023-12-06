@@ -26,9 +26,13 @@ public class WorldManager : MonoBehaviour {
     public int[] bulkyWaves = {4,9};
     public int[] bossWaves = {5,10};
     public int normalCount = 10;
+    public int normalBaseCount = 1;
     public int speedyCount = 8;
+    public int speedyBaseCount = 1;
     public int bulkyCount = 10;
+    public int bulkyBaseCount = 2;
     public int bossCount = 5;
+    public int bossBaseCount = 1;
 
     public int finalWave = 10;
 
@@ -101,7 +105,7 @@ public class WorldManager : MonoBehaviour {
             {
                 enemy = normalEnemies[0];
                 enemyCount = normalCount;
-    
+                enemyBaseAmount = normalBaseCount++;
                 if (i == 1)
                 {
                     waveDelayChange = 5;
@@ -118,6 +122,7 @@ public class WorldManager : MonoBehaviour {
             {
                 enemy = speedyEnemies[0];
                 enemyCount = speedyCount;
+                enemyBaseAmount = speedyBaseCount++;
     
                 speedyCount *= 2;
                 goto EndLoop;
@@ -129,12 +134,13 @@ public class WorldManager : MonoBehaviour {
             if (i == wave)
             {
                 enemy = bulkyEnemies[0];
-                enemyBaseAmount = 2;
                 enemyCount = bulkyCount;
+                enemyBaseAmount = bulkyBaseCount;
                 enemyIncrease = 4;
                 waveDelayChange = 3;
 
                 bulkyCount *= 2;
+                bulkyBaseCount *= 2;
                 goto EndLoop;
             }
         }
@@ -161,23 +167,31 @@ public class WorldManager : MonoBehaviour {
 
     private void SetWave(EnemyData enemyData, int total, int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
     {
-        while (waveEnemies.Count <= total)
+        while (waveEnemies.Count < total)
         {
             waveEnemies.Add(enemyData);
         }
 
-        StartCoroutine(SpawnEnemies(total, enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange));
+        StartCoroutine(SpawnEnemies(enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange));
     }
 
-    private IEnumerator SpawnEnemies(int total, int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
+    private IEnumerator SpawnEnemies(int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
     {
         yield return new WaitForSeconds(startWaveDelay);
 
-        int i = 0;
+        int i = 1;
 
         while (true)
         {
-            if (i == enemyIncrease) enemyBaseAmount *= 2;
+            if (i == enemyIncrease) 
+            {
+                enemyBaseAmount *= 2;
+
+                if (wave == 1)
+                {
+                    enemyIncrease += 2;
+                }
+            }
 
             if (i == waveDelayChange) waveDelay = waveDelay / 2 + 1;
 
