@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: c752744609810c24bb22f5b912803d26, type: 3}
   upgrade: {fileID: 11400000, guid: 055a018fd0d67474187fe67e8895e6fa, type: 2}
+  level: 1
   price: 100
   health: 4
   damage: 1

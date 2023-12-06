@@ -4,9 +4,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class GridSlot : MonoBehaviour {
     [SerializeField] private Image image;
-    [SerializeField] private GameObject turretPrefab, trapPrefab;
+    [SerializeField] private GameObject turretPrefab, trapPrefab, sundaePrefab;
     private Turret turret;
     private Wall trap;
+    private Sundae sundae;
 
     public Placeable activeItem;
 
@@ -14,6 +15,8 @@ public class GridSlot : MonoBehaviour {
         turret = (Turret)CreateItem(turretPrefab);
 
         trap = (Wall)CreateItem(trapPrefab);
+
+        sundae = (Sundae)CreateItem(sundaePrefab);
     }
 
     private Placeable CreateItem(GameObject prefab)
@@ -51,6 +54,9 @@ public class GridSlot : MonoBehaviour {
                 break;
             case WallData:
                 activeItem = trap;
+                break;
+            case SundaeData:
+                activeItem = sundae;
                 break;
             default:
                 return;

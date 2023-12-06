@@ -8,6 +8,8 @@ public class MouseObject : MonoBehaviour {
     public GameObject itemObject {get; private set;}
     private SpriteRenderer itemObjectRenderer;
 
+    private GridSlot lastGridSlot;
+
     public bool Sticking {get; private set;} = false;
 
     private void Awake() {
@@ -19,9 +21,12 @@ public class MouseObject : MonoBehaviour {
         itemObject.SetActive(false);
     }
 
-    public void StickToMouse(PlaceableData item)
+    public void StickToMouse(PlaceableData item, GridSlot gridSlot = null)
     {
         StopAllCoroutines();
+
+        lastGridSlot = gridSlot;
+        UIManager.Instance.SetCancel(true);
 
         StartCoroutine(StickingToMouse(item));
     }
@@ -52,7 +57,23 @@ public class MouseObject : MonoBehaviour {
         StopAllCoroutines();
 
         Sticking = false;
+        lastGridSlot = null;
 
         itemObject.SetActive(false);
+        UIManager.Instance.SetCancel(false);
+    }
+
+    public void Undo()
+    {
+        if (!Sticking) return;
+
+        if (lastGridSlot == null)
+        {
+            GameDataManager.Instance.AddCoins(selectedItem.price);
+            Placed();
+        } else 
+        {
+            lastGridSlot.SelectGrid();
+        }
     }
 }

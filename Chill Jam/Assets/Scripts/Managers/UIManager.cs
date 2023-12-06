@@ -4,7 +4,7 @@ using UnityEngine;
 public class UIManager : MonoBehaviour {
     public static UIManager Instance;
     [SerializeField] private TextMeshProUGUI coins, wave, lives;
-    [SerializeField] private GameObject itemMenu;
+    [SerializeField] private GameObject itemMenu, cancel;
     private ItemOptions itemOptions;
 
     private void Awake() {
@@ -14,6 +14,7 @@ public class UIManager : MonoBehaviour {
     private void Start() {
         itemMenu.TryGetComponent(out itemOptions);
         itemMenu.SetActive(false);
+        cancel.SetActive(false);
         
         SetLives();
     }
@@ -35,5 +36,15 @@ public class UIManager : MonoBehaviour {
     public void SetItem(GridSlot gridSlot)
     {
         itemOptions.SetData(gridSlot);
+    }
+
+    public void SetCancel(bool b)
+    {
+        cancel.SetActive(b);
+    }
+
+    public void Cancel()
+    {
+        MouseObject.Instance.Undo();
     }
 }

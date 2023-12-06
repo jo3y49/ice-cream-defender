@@ -11,15 +11,7 @@ public class TitleManager : MonoBehaviour {
 
     private void Awake() 
     {
-        gameData = SaveSystem.LoadGameData();
-
-        // if (gameData == null)
-        // {
-        //     loadButton.interactable = false;
-        //     gameData = new GameData();
-        // }
-
-        // settingsMenu.GetComponent<SettingsMenuManager>().Initialize(gameData.settingsData);
+        
     }
 
     public void StartGame()
@@ -27,17 +19,9 @@ public class TitleManager : MonoBehaviour {
         EnterGame(gameData.NewGame(), introSceneIndex);
     }
 
-    public void LoadGame()
-    {
-        if(gameData != null)
-        {
-            EnterGame(gameData, gameData.worldData.currentScene);
-        }
-    }
-
     private void EnterGame(GameData gameData, int sceneIndex)
     {
-        GameDataManager.Instance.InitializeGameData(gameData);
+        // GameDataManager.Instance.InitializeGameData(gameData);
 
         SceneManager.LoadScene(sceneIndex);
     }

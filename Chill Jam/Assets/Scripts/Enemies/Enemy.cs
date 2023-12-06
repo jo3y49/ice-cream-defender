@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour {
     public int coins = 1;
     public int damage = 1;
 
-    public void Initialize(EnemyData enemyData, bool moveRight)
+    public void Initialize(EnemyData enemyData, Transform spawn)
     {
         
         sr.sprite = enemyData.sprite;
@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
 
         box.size = 1.6f * enemyData.size * Vector2.one;
 
-        if (!moveRight) 
+        if (spawn.position.x > 0) 
         {
             sr.flipX = true;
             speed = -speed;

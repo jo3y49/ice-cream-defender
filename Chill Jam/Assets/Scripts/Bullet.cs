@@ -32,7 +32,7 @@ public class Bullet : MonoBehaviour {
 
     private IEnumerator WaitToHit()
     {
-        yield return new WaitForSeconds(15);
+        yield return new WaitForSeconds(5);
 
         Contact();
     }

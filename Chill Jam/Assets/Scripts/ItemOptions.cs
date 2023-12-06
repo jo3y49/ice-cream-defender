@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ItemOptions : MonoBehaviour {
     [SerializeField] private Image itemImage;
     [SerializeField] private GameObject upgradeButton;
+    [SerializeField] private TextMeshProUGUI levelText;
     private GridSlot gridSlot;
     private PlaceableData data;
 
@@ -20,6 +22,7 @@ public class ItemOptions : MonoBehaviour {
         this.gridSlot = gridSlot;
 
         data = gridSlot.activeItem.data;
+        levelText.text = data.level.ToString();
 
         // itemImage.sprite = data.sprite;
 
@@ -37,7 +40,7 @@ public class ItemOptions : MonoBehaviour {
     {
         if (!MouseObject.Instance.Sticking)
         {
-            MouseObject.Instance.StickToMouse(data);
+            MouseObject.Instance.StickToMouse(data, gridSlot);
             gridSlot.Destroyed();
         }  
 

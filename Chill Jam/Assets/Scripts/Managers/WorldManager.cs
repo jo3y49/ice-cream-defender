@@ -9,8 +9,7 @@ using UnityEngine.UI;
 public class WorldManager : MonoBehaviour {
     public static WorldManager Instance {get; private set;}
     [SerializeField] private UIManager uiManager;
-    [SerializeField] private Transform[] leftSpawns;
-    [SerializeField] private Transform[] rightSpawns;
+    [SerializeField] private Transform[] spawns;
     private float bigY;
     [SerializeField] private GameObject waveButton;
     private List<EnemyData> normalEnemies = new();
@@ -19,7 +18,7 @@ public class WorldManager : MonoBehaviour {
     private List<EnemyData> bossEnemies = new(); 
 
     public float timeBetweenSpawns = 1;
-    public float waveDelay = 2;
+    public float startWaveDelay = 2;
     public float waveCoinRewardMultiplier = 100;
 
     public int[] normalWaves = {1,3,6,8};
@@ -34,6 +33,7 @@ public class WorldManager : MonoBehaviour {
     public int finalWave = 10;
 
     private int wave = 1;
+    private int spawnAmount;
     private List<EnemyData> waveEnemies = new();
     private List<GameObject> liveEnemies = new();
 
@@ -42,10 +42,12 @@ public class WorldManager : MonoBehaviour {
 
         SortEnemies();
 
-        foreach (Transform t in leftSpawns)
+        spawnAmount = spawns.Length;
+
+        foreach (Transform t in spawns)
             bigY += t.position.y;
 
-        bigY /= leftSpawns.Length;
+        bigY /= spawnAmount;
 
         uiManager.SetWave(wave);
 
@@ -86,13 +88,27 @@ public class WorldManager : MonoBehaviour {
 
     private void StartWave(int wave)
     {
+        EnemyData enemy = null;
+        int enemyCount = 10;
+        int enemyBaseAmount = 1;
+        int enemyIncrease = 3;
+        int waveDelay = 5;
+        int waveDelayChange = 4;
+
         foreach (int i in normalWaves)
         {
             if (i == wave)
             {
-                SetWave(normalEnemies[0], normalCount);
+                enemy = normalEnemies[0];
+                enemyCount = normalCount;
+    
+                if (i == 1)
+                {
+                    waveDelayChange = 5;
+                } 
+
                 normalCount *= 2;
-                return;
+                goto EndLoop;
             }
         }
 
@@ -100,9 +116,11 @@ public class WorldManager : MonoBehaviour {
         {
             if (i == wave)
             {
-                SetWave(speedyEnemies[0], speedyCount);
+                enemy = speedyEnemies[0];
+                enemyCount = speedyCount;
+    
                 speedyCount *= 2;
-                return;
+                goto EndLoop;
             }
         }
 
@@ -110,9 +128,14 @@ public class WorldManager : MonoBehaviour {
         {
             if (i == wave)
             {
-                SetWave(bulkyEnemies[0], bulkyCount);
+                enemy = bulkyEnemies[0];
+                enemyBaseAmount = 2;
+                enemyCount = bulkyCount;
+                enemyIncrease = 4;
+                waveDelayChange = 3;
+
                 bulkyCount *= 2;
-                return;
+                goto EndLoop;
             }
         }
 
@@ -120,46 +143,59 @@ public class WorldManager : MonoBehaviour {
         {
             if (i == wave)
             {
-                SetWave(bossEnemies[0], bossCount);
+                enemy = bossEnemies[0];
+                enemyCount = bossCount;
+                enemyIncrease = 2;
+                waveDelay = 10;
+                waveDelayChange = 5;
+
                 bossCount *= 2;
-                return;
+                goto EndLoop;
             }
         }
+
+        EndLoop:
+
+        SetWave(enemy, enemyCount, enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange);
     }
 
-    private void SetWave(EnemyData enemyData, int total)
+    private void SetWave(EnemyData enemyData, int total, int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
     {
         while (waveEnemies.Count <= total)
         {
             waveEnemies.Add(enemyData);
         }
 
-        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnEnemies(total, enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange));
     }
 
-    private IEnumerator SpawnEnemies()
+    private IEnumerator SpawnEnemies(int total, int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
     {
-        yield return new WaitForSeconds(waveDelay);
+        yield return new WaitForSeconds(startWaveDelay);
 
-        while (waveEnemies.Count > 0)
+        int i = 0;
+
+        while (true)
         {
-            foreach (Transform spawn in leftSpawns)
+            if (i == enemyIncrease) enemyBaseAmount *= 2;
+
+            if (i == waveDelayChange) waveDelay = waveDelay / 2 + 1;
+
+            for (int j = 0; j < enemyBaseAmount; j++)
             {
-                SpawnEnemy(spawn, waveEnemies[0], true);
+                int r = Random.Range(0, spawnAmount);
+                Transform spawn = spawns[r];
+
+                SpawnEnemy(spawn, waveEnemies[0]);
 
                 yield return new WaitForSeconds(timeBetweenSpawns);
 
                 if (waveEnemies.Count == 0) goto EndLoop;
             }
 
-            foreach (Transform spawn in rightSpawns)
-            {
-                SpawnEnemy(spawn, waveEnemies[0], false);
-                
-                yield return new WaitForSeconds(timeBetweenSpawns);
+            i++;
 
-                if (waveEnemies.Count == 0) goto EndLoop;
-            }
+            yield return new WaitForSeconds(waveDelay);
         }
 
         EndLoop:
@@ -167,7 +203,7 @@ public class WorldManager : MonoBehaviour {
         StartCoroutine(WaitForEnd());
     }
 
-    private void SpawnEnemy(Transform spawn, EnemyData nextEnemy, bool moveRight)
+    private void SpawnEnemy(Transform spawn, EnemyData nextEnemy)
     {
         waveEnemies.Remove(nextEnemy);
 
@@ -180,7 +216,7 @@ public class WorldManager : MonoBehaviour {
 
         
         enemyObject.SetActive(true);
-        enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, moveRight);
+        enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, spawn);
         
         liveEnemies.Add(enemyObject);
     }
