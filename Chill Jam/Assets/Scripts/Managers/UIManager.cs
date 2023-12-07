@@ -40,7 +40,7 @@ public class UIManager : MonoBehaviour {
 
     public void SetCancel(bool b)
     {
-        cancel.SetActive(b);
+        // cancel.SetActive(b);
     }
 
     public void Cancel()

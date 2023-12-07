@@ -18,6 +18,11 @@ public class ItemOptions : MonoBehaviour {
             return;
         }
 
+        UpdateItem(gridSlot);
+    }
+
+    private void UpdateItem(GridSlot gridSlot)
+    {
         StopAllCoroutines();
         gameObject.SetActive(true);
 
@@ -35,7 +40,6 @@ public class ItemOptions : MonoBehaviour {
         }
         else 
             upgradeButton.SetActive(false);
-        
     }
 
     public void Move()
@@ -45,11 +49,14 @@ public class ItemOptions : MonoBehaviour {
             MouseObject.Instance.StickToMouse(data, gridSlot);
             gridSlot.Destroyed();
         }  
+
+        Selected();
     }
 
     public void Upgrade()
     {
         gridSlot.activeItem.Upgrade();
+        UpdateItem(gridSlot);
     }
 
     public void Sell()
@@ -57,6 +64,8 @@ public class ItemOptions : MonoBehaviour {
         GameDataManager.Instance.AddCoins(data.price/2);
 
         gridSlot.Destroyed();
+
+        Selected();
     }
 
     private void Selected()

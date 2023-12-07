@@ -48,6 +48,8 @@ public class MouseObject : MonoBehaviour {
 
         selectedItem = item;
 
+        StartCoroutine(CheckForClick());
+
         Sticking = true;
 
         while (Sticking)
@@ -57,12 +59,23 @@ public class MouseObject : MonoBehaviour {
 
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePos);
             itemObject.transform.position = new Vector3(worldPosition.x, worldPosition.y, worldPosition.z);
-
+                
             yield return null;
         }
 
         itemObject.SetActive(false);
         UIManager.Instance.SetCancel(false);
+
+        StopAllCoroutines();
+    }
+
+    private IEnumerator CheckForClick()
+    {
+        yield return new WaitUntil(() => Input.GetMouseButtonDown(0));
+
+        yield return new WaitUntil(() => Input.GetMouseButtonUp(0));
+
+        Undo();
     }
 
     public void Placed()
