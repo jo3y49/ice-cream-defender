@@ -9,13 +9,11 @@ public class BuyButton : MonoBehaviour {
 
     public void Transaction()
     {
-        if (GameDataManager.Instance.GetCoins() >= item.price && !MouseObject.Instance.Sticking)
+        if (GameDataManager.Instance.GetCoins() >= item.price && !MouseObject.Instance.Sticking && Time.timeScale == 1)
         {
             GameDataManager.Instance.AddCoins(-item.price);
 
             MouseObject.Instance.StickToMouse(item);
         }
     }
-
-    
 }

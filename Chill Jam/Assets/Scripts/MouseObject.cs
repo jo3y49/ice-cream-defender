@@ -21,9 +21,19 @@ public class MouseObject : MonoBehaviour {
         itemObject.SetActive(false);
     }
 
+    private void OnEnable() {
+        PauseManager.PauseEvent += (b) => Undo();
+    }
+
+    private void OnDisable() {
+        PauseManager.PauseEvent -= (b) => Undo();
+    }
+
     public void StickToMouse(PlaceableData item, GridSlot gridSlot = null)
     {
-        StopAllCoroutines();
+        if (Time.timeScale == 0) return;
+
+        Sticking = false;
 
         lastGridSlot = gridSlot;
         UIManager.Instance.SetCancel(true);
@@ -40,7 +50,7 @@ public class MouseObject : MonoBehaviour {
 
         Sticking = true;
 
-        while (true)
+        while (Sticking)
         {
             Vector3 mousePos = Input.mousePosition;
             mousePos.z = Camera.main.nearClipPlane;
@@ -50,17 +60,15 @@ public class MouseObject : MonoBehaviour {
 
             yield return null;
         }
+
+        itemObject.SetActive(false);
+        UIManager.Instance.SetCancel(false);
     }
 
     public void Placed()
     {
-        StopAllCoroutines();
-
         Sticking = false;
         lastGridSlot = null;
-
-        itemObject.SetActive(false);
-        UIManager.Instance.SetCancel(false);
     }
 
     public void Undo()
@@ -75,5 +83,7 @@ public class MouseObject : MonoBehaviour {
         {
             lastGridSlot.SelectGrid();
         }
+
+        Sticking = false;
     }
 }

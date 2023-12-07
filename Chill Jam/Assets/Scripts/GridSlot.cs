@@ -31,7 +31,7 @@ public class GridSlot : MonoBehaviour {
 
     public void SelectGrid()
     {
-        if (!MouseObject.Instance.Sticking)
+        if (!MouseObject.Instance.Sticking && Time.timeScale == 1)
         {
             UIManager.Instance.SetItem(this);
             return;
@@ -41,7 +41,6 @@ public class GridSlot : MonoBehaviour {
         MouseObject.Instance.Placed();
 
         SetItem(MouseObject.Instance.selectedItem);
-
         
     }
 
