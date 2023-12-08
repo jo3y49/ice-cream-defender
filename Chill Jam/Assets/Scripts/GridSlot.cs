@@ -44,13 +44,13 @@ public class GridSlot : MonoBehaviour {
 
         MouseObject.Instance.Placed();
 
-        SetItem(MouseObject.Instance.selectedItem);
+        SetItem(MouseObject.Instance.GetItem());
         
     }
 
-    public void SetItem(PlaceableData item)
+    public void SetItem((PlaceableData, int) item)
     {
-        switch (item)
+        switch (item.Item1)
         {
             case TurretData:
                 activeItem = turret;
@@ -66,7 +66,7 @@ public class GridSlot : MonoBehaviour {
         }
 
         activeItem.gameObject.SetActive(true);
-        activeItem.Initialize(item);
+        activeItem.Initialize(item.Item1, item.Item2);
     }
 
     public void Destroyed()

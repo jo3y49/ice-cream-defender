@@ -6998,7 +6998,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8774706323282184459, guid: 9dbdf0271be6cbc499789fcd991f115b, type: 3}
       propertyPath: bossWaves.Array.data[0]
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8774706323282184459, guid: 9dbdf0271be6cbc499789fcd991f115b, type: 3}
       propertyPath: leftSpawns.Array.data[0]
@@ -7010,7 +7010,7 @@ PrefabInstance:
       objectReference: {fileID: 1101250180}
     - target: {fileID: 8774706323282184459, guid: 9dbdf0271be6cbc499789fcd991f115b, type: 3}
       propertyPath: normalWaves.Array.data[0]
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8774706323282184459, guid: 9dbdf0271be6cbc499789fcd991f115b, type: 3}
       propertyPath: rightSpawns.Array.data[0]

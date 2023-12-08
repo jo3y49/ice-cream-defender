@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2203937368896551826, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
       propertyPath: m_Name
-      value: Placeable Variant
+      value: Turret
       objectReference: {fileID: 0}
     - target: {fileID: 8553357605370719903, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
       propertyPath: m_LocalPosition.x
@@ -60,6 +60,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6432995995940093802}
   m_SourcePrefab: {fileID: 100100000, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
+--- !u!4 &455509847972468675 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3679632159108310091, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
+  m_PrefabInstance: {fileID: 3837882991197451144}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3159014980479600666 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2203937368896551826, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
@@ -78,6 +83,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 3300355440015908822}
+  healthBar: {fileID: 455509847972468675}
+  data: {fileID: 0}
+  health: 0
 --- !u!212 &3300355440015908822 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1769864035110186078, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}

@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 2141259214512764250}
+  healthBar: {fileID: 3902434959224929615}
   data: {fileID: 0}
   health: 0
   bombRadius: {fileID: 8077816601184568029}
@@ -132,5 +133,10 @@ BoxCollider2D:
 --- !u!212 &2141259214512764250 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1769864035110186078, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
+  m_PrefabInstance: {fileID: 376215630324160772}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3902434959224929615 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3679632159108310091, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
   m_PrefabInstance: {fileID: 376215630324160772}
   m_PrefabAsset: {fileID: 0}

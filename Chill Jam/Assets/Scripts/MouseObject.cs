@@ -4,13 +4,14 @@ using System.Collections;
 public class MouseObject : MonoBehaviour {
     public static MouseObject Instance;
     [SerializeField] private GameObject itemOnMousePrefab;
-    public PlaceableData selectedItem {get; private set;}
+    private PlaceableData selectedItem;
     public GameObject itemObject {get; private set;}
     private SpriteRenderer itemObjectRenderer;
 
     private GridSlot lastGridSlot;
 
     public bool Sticking {get; private set;} = false;
+    private int itemHealth = 0;
 
     private void Awake() {
         Instance = this;
@@ -36,6 +37,11 @@ public class MouseObject : MonoBehaviour {
         Sticking = false;
 
         lastGridSlot = gridSlot;
+
+        if (gridSlot != null) itemHealth = gridSlot.activeItem.health;
+
+        else itemHealth = 0;
+        
         UIManager.Instance.SetCancel(true);
 
         StartCoroutine(StickingToMouse(item));
@@ -99,5 +105,10 @@ public class MouseObject : MonoBehaviour {
         }
 
         Sticking = false;
+    }
+
+    public (PlaceableData, int) GetItem()
+    {
+        return (selectedItem, itemHealth);
     }
 }

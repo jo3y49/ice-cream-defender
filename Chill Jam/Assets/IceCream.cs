@@ -36,7 +36,7 @@ public class IceCream : MonoBehaviour {
 
     public void Scared()
     {
-        sr.sprite = scared;
+        if (sr.sprite != dead) sr.sprite = scared;
     }
 
     private IEnumerator ScanForEnemies()

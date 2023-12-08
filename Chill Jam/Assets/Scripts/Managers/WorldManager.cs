@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WorldManager : MonoBehaviour {
@@ -115,11 +116,15 @@ public class WorldManager : MonoBehaviour {
                 if (i == 1)
                 {
                     waveDelayChange = 5;
-                } else if (i > 5)
+                } else if (i == 6)
                 {
                     normalCount *= 2;
                     enemyBaseAmount = normalBaseCount++;
                     waveDelay /= 2;
+                } else if (i == 8)
+                {
+                    enemyBaseAmount = normalBaseCount++;
+                    waveDelay /= 4;
                 }
 
                 normalCount *= 2;
@@ -137,9 +142,9 @@ public class WorldManager : MonoBehaviour {
 
                 if (i > 5)
                 {
-                    speedyCount *= 2;
+                    speedyCount *= 3;
                     enemyBaseAmount = speedyBaseCount++;
-                    waveDelay /= 2;
+                    waveDelay /= 3;
                 }
     
                 speedyCount *= 2;
@@ -157,8 +162,10 @@ public class WorldManager : MonoBehaviour {
                 enemyIncrease = 4;
                 waveDelayChange = 3;
 
-                bulkyCount *= 4;
-                bulkyBaseCount *= 4;
+                if (i == 9) waveDelay /= 2;
+
+                bulkyCount *= 5;
+                bulkyBaseCount *= 5;
                 goto EndLoop;
             }
         }
@@ -313,6 +320,8 @@ public class WorldManager : MonoBehaviour {
         uiManager.SetWave(wave);
 
         waveButton.SetActive(true);
+
+        if (wave > finalWave) SceneManager.LoadScene(2);
     }
 
     public void DebugSkipWave()

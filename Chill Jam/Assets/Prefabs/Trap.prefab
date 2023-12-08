@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2203937368896551826, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
       propertyPath: m_Name
-      value: Trap Variant
+      value: Trap
       objectReference: {fileID: 0}
     - target: {fileID: 8553357605370719903, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
       propertyPath: m_LocalPosition.x
@@ -83,3 +83,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sr: {fileID: 1911827243380010867}
+  healthBar: {fileID: 3537384808679090022}
+  data: {fileID: 0}
+  health: 0
+--- !u!4 &3537384808679090022 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3679632159108310091, guid: 54afd68b5fe00cb48ade64cc5fa3c278, type: 3}
+  m_PrefabInstance: {fileID: 146364006526812973}
+  m_PrefabAsset: {fileID: 0}
