@@ -8,21 +8,36 @@ public class Enemy : MonoBehaviour {
     [SerializeField] private SpriteRenderer sr;
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private BoxCollider2D box;
-    public int health = 1;
+    [SerializeField] private Transform healthBar;
+    public int health, maxHealth = 1;
     public float speed = 1;
     public int coins = 1;
     public int damage = 1;
+
+    private Vector3 healthBarScale, healthBarPosition;
+
+    private void Awake() {
+        healthBarScale = healthBar.localScale;
+        healthBarPosition = new Vector3(0, healthBar.localPosition.y, 0);
+    }
 
     public void Initialize(EnemyData enemyData, Transform spawn)
     {
         
         sr.sprite = enemyData.sprite;
-        health = enemyData.health;
+        health = maxHealth = enemyData.health;
+        healthBar.localScale = healthBarScale;
+        healthBar.localPosition = new Vector3(0, healthBarPosition.y, 0);
         speed = enemyData.speed;
         coins = enemyData.coins;
         damage = enemyData.damage;
 
         box.size = 1.6f * enemyData.size * Vector2.one;
+
+        if (enemyData.size == 2)
+        {
+            healthBar.position += Vector3.up * 1.1f;
+        }
 
         if (spawn.position.x > 0) 
         {
@@ -49,14 +64,19 @@ public class Enemy : MonoBehaviour {
         else if (other.gameObject.CompareTag("Player"))
         {
             other.gameObject.GetComponentInParent<IceCream>().Hit();
-            Death(0);
         }
     }
 
     public void Shot(int damage)
     {
         health -= damage;
-        if (health <= 0) Death(coins);
+        if (health <= 0) Death();
+
+        else
+        {
+            healthBar.localScale = new Vector3(healthBarScale.x * health / maxHealth, healthBarScale.y,1);
+            // healthBar.position = new Vector3(transform.position.x - ((health / (float)maxHealth) * healthBarScale.x), healthBar.position.y,0);
+        } 
     }
 
     private IEnumerator WaitToMove(Placeable placeable)
@@ -83,11 +103,11 @@ public class Enemy : MonoBehaviour {
 
     public void Kill()
     {
-        Death(coins);
+        Death();
     }
 
-    private void Death(int c)
+    private void Death()
     {
-        WorldManager.Instance.DefeatedEnemy(gameObject, c);
+        WorldManager.Instance.DefeatedEnemy(gameObject, coins);
     }
 }

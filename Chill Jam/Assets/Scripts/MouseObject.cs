@@ -78,8 +78,10 @@ public class MouseObject : MonoBehaviour {
         Undo();
     }
 
-    public void Placed()
+    public void Placed(bool buy = true)
     {
+        if (lastGridSlot == null && buy) GameDataManager.Instance.AddCoins(-selectedItem.price);
+
         Sticking = false;
         lastGridSlot = null;
     }
@@ -90,8 +92,7 @@ public class MouseObject : MonoBehaviour {
 
         if (lastGridSlot == null)
         {
-            GameDataManager.Instance.AddCoins(selectedItem.price);
-            Placed();
+            Placed(false);
         } else 
         {
             lastGridSlot.SelectGrid();

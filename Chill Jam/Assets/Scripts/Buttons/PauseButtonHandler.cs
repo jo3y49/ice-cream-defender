@@ -41,9 +41,9 @@ public class PauseButtonHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void Pause()
     {
-        if (image.sprite == pauseSprite) image.sprite = playSprite;
+        if (GetPaused()) image.sprite = pauseSprite;
 
-        else image.sprite = pauseSprite;
+        else image.sprite = playSprite;
 
         PauseManager.TogglePause();
     }

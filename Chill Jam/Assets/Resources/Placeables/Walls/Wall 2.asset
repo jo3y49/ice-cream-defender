@@ -15,6 +15,6 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: fe67434f08f9f32488325af72b571fa4, type: 3}
   upgrade: {fileID: 11400000, guid: 700f23446736ce0489c98b2b500ce2e8, type: 2}
   level: 2
-  price: 150
+  price: 300
   health: 30
   damage: 0

@@ -11,8 +11,6 @@ public class BuyButton : MonoBehaviour {
     {
         if (GameDataManager.Instance.GetCoins() >= item.price && !MouseObject.Instance.Sticking && Time.timeScale == 1)
         {
-            GameDataManager.Instance.AddCoins(-item.price);
-
             MouseObject.Instance.StickToMouse(item);
         }
     }

@@ -9,7 +9,7 @@ public class ItemOptions : MonoBehaviour {
     private Image upgradeImage;
     [SerializeField] private Sprite upgradeReady, upgradeNot, upgradeMax;
     [SerializeField] private GameObject upgradeText;
-    [SerializeField] private TextMeshProUGUI levelText, priceText;
+    [SerializeField] private TextMeshProUGUI levelText, priceText, sellText;
     private GridSlot gridSlot;
     private PlaceableData data;
 
@@ -25,6 +25,10 @@ public class ItemOptions : MonoBehaviour {
             return;
         }
 
+        gridSlot.ToggleGridHighlight(true);
+
+        if (this.gridSlot != null) this.gridSlot.ToggleGridHighlight(false);
+
         UpdateItem(gridSlot);
     }
 
@@ -33,10 +37,13 @@ public class ItemOptions : MonoBehaviour {
         StopAllCoroutines();
         gameObject.SetActive(true);
 
+        StartCoroutine(CheckForClick());
+
         this.gridSlot = gridSlot;
 
         data = gridSlot.activeItem.data;
         levelText.text = data.level.ToString();
+        sellText.text = (data.price/2).ToString();
 
         itemImage.sprite = data.sprite;
         itemImage.SetNativeSize();
@@ -103,16 +110,9 @@ public class ItemOptions : MonoBehaviour {
 
     private void Selected()
     {
+        if (gridSlot != null) gridSlot.ToggleGridHighlight(false);
         gridSlot = null;
         gameObject.SetActive(false);
-    }
-
-    private void OnEnable() {
-        StartCoroutine(CheckForClick());
-    }
-
-    private void OnDisable() {
-        StopAllCoroutines();
     }
 
     private IEnumerator CheckForClick()

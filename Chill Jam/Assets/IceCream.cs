@@ -9,11 +9,16 @@ public class IceCream : MonoBehaviour {
 
     public float jumpHeight, jumpDuration, shadowShrinkPercent;
 
+    private Vector3 iceCreamStartPosition, shadowStartScale;
+
     private Coroutine hopping;
     
 
     private void Start() {
         StartCoroutine(ScanForEnemies());
+
+        iceCreamStartPosition = iceCream.transform.localPosition;
+        shadowStartScale = shadow.transform.localScale;
     }
     public void Hit()
     {
@@ -63,8 +68,6 @@ public class IceCream : MonoBehaviour {
 
     public void Hop()
     {
-        Safe();
-
         if (hopping != null) return;
 
         hopping = StartCoroutine(HopAnimation());
@@ -72,11 +75,11 @@ public class IceCream : MonoBehaviour {
 
     private IEnumerator HopAnimation()
     {
-        Vector3 startPosition = iceCream.transform.localPosition;
-        Vector3 peakPosition = startPosition + new Vector3(0, jumpHeight, 0);
+        Safe();
 
-        Vector3 originalShadowScale = shadow.transform.localScale;
-        Vector3 shrunkenShadowScale = originalShadowScale * shadowShrinkPercent;
+        Vector3 peakPosition = iceCreamStartPosition + new Vector3(0, jumpHeight, 0);
+
+        Vector3 shrunkenShadowScale = shadowStartScale * shadowShrinkPercent;
 
         // Hop up and down twice
         for (int i = 0; i < 2; i++)
@@ -86,8 +89,8 @@ public class IceCream : MonoBehaviour {
             while (time < jumpDuration)
             {
                 float lerpFactor = time / jumpDuration;
-                iceCream.transform.localPosition = Vector3.Lerp(startPosition, peakPosition, lerpFactor);
-                shadow.transform.localScale = Vector3.Lerp(originalShadowScale, shrunkenShadowScale, lerpFactor);
+                iceCream.transform.localPosition = Vector3.Lerp(iceCreamStartPosition, peakPosition, lerpFactor);
+                shadow.transform.localScale = Vector3.Lerp(shadowStartScale, shrunkenShadowScale, lerpFactor);
 
                 time += Time.deltaTime;
                 yield return null;
@@ -98,8 +101,8 @@ public class IceCream : MonoBehaviour {
             while (time < jumpDuration)
             {
                 float lerpFactor = time / jumpDuration;
-                iceCream.transform.localPosition = Vector3.Lerp(peakPosition, startPosition, lerpFactor);
-                shadow.transform.localScale = Vector3.Lerp(shrunkenShadowScale, originalShadowScale, lerpFactor);
+                iceCream.transform.localPosition = Vector3.Lerp(peakPosition, iceCreamStartPosition, lerpFactor);
+                shadow.transform.localScale = Vector3.Lerp(shrunkenShadowScale, shadowStartScale, lerpFactor);
 
                 time += Time.deltaTime;
                 yield return null;

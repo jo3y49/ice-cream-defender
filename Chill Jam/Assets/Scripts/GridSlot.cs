@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Image))]
 public class GridSlot : MonoBehaviour {
-    [SerializeField] private Image image;
-    [SerializeField] private GameObject turretPrefab, trapPrefab, sundaePrefab;
+    [SerializeField] private Image itemImage;
+    [SerializeField] private GameObject turretPrefab, trapPrefab, sundaePrefab, gridHighlight;
     private Turret turret;
     private Wall trap;
     private Bomb sundae;
@@ -12,6 +12,8 @@ public class GridSlot : MonoBehaviour {
     public Placeable activeItem;
 
     private void Start() {
+        gridHighlight.SetActive(false);
+
         turret = (Turret)CreateItem(turretPrefab);
 
         trap = (Wall)CreateItem(trapPrefab);
@@ -31,7 +33,9 @@ public class GridSlot : MonoBehaviour {
 
     public void SelectGrid()
     {
-        if (!MouseObject.Instance.Sticking && Time.timeScale == 1)
+        if (Time.timeScale == 0) return;
+
+        if (!MouseObject.Instance.Sticking)
         {
             UIManager.Instance.SetItem(this);
             return;
@@ -71,5 +75,10 @@ public class GridSlot : MonoBehaviour {
 
         activeItem.gameObject.SetActive(false);
         activeItem = null;
+    }
+
+    public void ToggleGridHighlight(bool b)
+    {
+        gridHighlight.SetActive(b);
     }
 }

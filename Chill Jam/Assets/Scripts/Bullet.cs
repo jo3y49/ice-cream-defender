@@ -36,6 +36,6 @@ public class Bullet : MonoBehaviour {
     {
         yield return new WaitForSeconds(5);
 
-        Contact();
+        Pool.Instance.ReturnBullet(gameObject);
     }
 }
