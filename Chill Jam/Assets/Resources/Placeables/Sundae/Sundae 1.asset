@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 773436d0806dd8a42be26addf2916115, type: 3}
   m_Name: Sundae 1
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 243190634d7cdcb4d859c74374312315, type: 3}
+  sprite: {fileID: 21300000, guid: b00b649a89df87740a03acecd6ded6b9, type: 3}
   upgrade: {fileID: 11400000, guid: e866aa13bb6bac945acce546d5aa81fd, type: 2}
   level: 1
   price: 100
   health: 1
   damage: 4
+  explosionSprite: {fileID: 21300000, guid: 68d30b63af3a1bd4b8ed0cc528d035a2, type: 3}

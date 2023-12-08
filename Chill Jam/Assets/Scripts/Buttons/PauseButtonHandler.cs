@@ -36,13 +36,15 @@ public class PauseButtonHandler : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (image.sprite == pauseSprite) image.sprite = playSprite;
-
-        else image.sprite = pauseSprite;
+        
     }
 
     public void Pause()
     {
+        if (image.sprite == pauseSprite) image.sprite = playSprite;
+
+        else image.sprite = pauseSprite;
+
         PauseManager.TogglePause();
     }
 

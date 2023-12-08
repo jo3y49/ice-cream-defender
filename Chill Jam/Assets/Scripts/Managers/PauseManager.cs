@@ -6,15 +6,7 @@ public class PauseManager : MonoBehaviour {
     public static event Action<bool> PauseEvent;
 
     private void Awake() {
-        if (instance == null)
-        {
-            instance = this;
-
-            DontDestroyOnLoad(gameObject);
-        } else
-        {
-            Destroy(gameObject);
-        }
+        instance = this;
     }
 
     public static void TogglePause() {

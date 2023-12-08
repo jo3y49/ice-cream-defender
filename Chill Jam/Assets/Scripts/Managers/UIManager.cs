@@ -1,10 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
     public static UIManager Instance;
-    [SerializeField] private TextMeshProUGUI coins, wave, lives;
-    [SerializeField] private GameObject itemMenu, cancel;
+    [SerializeField] private TextMeshProUGUI coins, wave;
+    [SerializeField] private GameObject itemMenu, cancel, loseUI;
+    [SerializeField] private Button pauseButton;
     private ItemOptions itemOptions;
 
     private void Awake() {
@@ -15,6 +18,7 @@ public class UIManager : MonoBehaviour {
         itemMenu.TryGetComponent(out itemOptions);
         itemMenu.SetActive(false);
         cancel.SetActive(false);
+        loseUI.SetActive(false);
     }
 
     private void Update() {
@@ -39,5 +43,26 @@ public class UIManager : MonoBehaviour {
     public void Cancel()
     {
         MouseObject.Instance.Undo();
+    }
+
+    public void Lose()
+    {
+        itemMenu.SetActive(false);
+        pauseButton.interactable = false;
+        PauseManager.TogglePause();
+
+        loseUI.SetActive(true);
+    }
+
+    public void Retry()
+    {
+        PauseManager.TogglePause();
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void Quit()
+    {
+        // SceneManager.LoadScene(0);
     }
 }

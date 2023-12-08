@@ -8,7 +8,8 @@ public class ItemOptions : MonoBehaviour {
     [SerializeField] private Button upgradeButton;
     private Image upgradeImage;
     [SerializeField] private Sprite upgradeReady, upgradeNot, upgradeMax;
-    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private GameObject upgradeText;
+    [SerializeField] private TextMeshProUGUI levelText, priceText;
     private GridSlot gridSlot;
     private PlaceableData data;
 
@@ -42,6 +43,24 @@ public class ItemOptions : MonoBehaviour {
 
         if (data.upgrade != null)
         {
+            upgradeText.SetActive(true);
+            priceText.text = data.upgrade.price.ToString();
+
+            StartCoroutine(CheckMoney());
+        }
+        else 
+        {
+            upgradeImage.sprite = upgradeMax;
+            upgradeText.SetActive(false);
+        }
+
+        upgradeButton.interactable = upgradeImage.sprite == upgradeReady;
+    }
+
+    private IEnumerator CheckMoney()
+    {
+        while (true)
+        {
             if (GameDataManager.Instance.GetCoins() >= data.upgrade.price)
             {
                 upgradeImage.sprite = upgradeReady;
@@ -49,11 +68,11 @@ public class ItemOptions : MonoBehaviour {
             {
                 upgradeImage.sprite = upgradeNot;
             }
-        }
-        else 
-            upgradeImage.sprite = upgradeMax;
 
-        upgradeButton.interactable = upgradeImage.sprite == upgradeReady;
+            upgradeButton.interactable = upgradeImage.sprite == upgradeReady;
+
+            yield return null;
+        }
     }
 
     public void Move()

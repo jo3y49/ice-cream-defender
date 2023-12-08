@@ -13,29 +13,21 @@ public class AudioControl : MonoBehaviour {
     private bool initialPause = false;
 
     private void Awake() {
-        if (instance == null)
+        instance = this;
+
+        PauseManager.PauseEvent += PauseAudio;
+
+        if (initialTrack)
         {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
+            audioSource.loop = false;
+            audioSource.clip = initial;
+            audioSource.Play();
 
-            PauseManager.PauseEvent += PauseAudio;
-
-            if (initialTrack)
-            {
-                audioSource.loop = false;
-                audioSource.clip = initial;
-                audioSource.Play();
-
-                StartCoroutine(WaitForLoop());
-            } 
-            else
-            {
-                PlayLoop();
-            }
-        }
-        else 
+            StartCoroutine(WaitForLoop());
+        } 
+        else
         {
-            Destroy(gameObject);
+            PlayLoop();
         }
     }
 

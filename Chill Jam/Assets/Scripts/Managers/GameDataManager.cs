@@ -42,15 +42,8 @@ public class GameDataManager : MonoBehaviour {
     }
 
     private void Awake() {
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-            gameData = new GameData();
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
+
+        gameData = new GameData();
     }
 }

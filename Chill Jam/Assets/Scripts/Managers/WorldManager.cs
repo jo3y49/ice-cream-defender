@@ -1,14 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection.Emit;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class WorldManager : MonoBehaviour {
     public static WorldManager Instance {get; private set;}
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private IceCream iceCream;
     [SerializeField] private Transform[] spawns;
     private float bigY;
     [SerializeField] private GameObject waveButton;
@@ -19,7 +17,7 @@ public class WorldManager : MonoBehaviour {
 
     public float timeBetweenSpawns = 1;
     public float startWaveDelay = 2;
-    public float waveCoinRewardMultiplier = 100;
+    public int waveCoins = 100;
 
     public int[] normalWaves = {1,3,6,8};
     public int[] speedyWaves = {2,7};
@@ -87,6 +85,8 @@ public class WorldManager : MonoBehaviour {
     {
         AudioManager.instance.StartWave();
 
+        iceCream.Hop();
+
         StartWave(wave);
 
         waveButton.SetActive(false);
@@ -111,7 +111,11 @@ public class WorldManager : MonoBehaviour {
                 if (i == 1)
                 {
                     waveDelayChange = 5;
-                } 
+                } else if (i > 5)
+                {
+                    normalCount *= 2;
+                    enemyBaseAmount = normalBaseCount++;
+                }
 
                 normalCount *= 2;
                 goto EndLoop;
@@ -125,6 +129,12 @@ public class WorldManager : MonoBehaviour {
                 enemy = speedyEnemies[0];
                 enemyCount = speedyCount;
                 enemyBaseAmount = speedyBaseCount++;
+
+                if (i > 5)
+                {
+                    speedyCount *= 2;
+                    enemyBaseAmount = speedyBaseCount++;
+                }
     
                 speedyCount *= 2;
                 goto EndLoop;
@@ -141,8 +151,8 @@ public class WorldManager : MonoBehaviour {
                 enemyIncrease = 4;
                 waveDelayChange = 3;
 
-                bulkyCount *= 2;
-                bulkyBaseCount *= 2;
+                bulkyCount *= 4;
+                bulkyBaseCount *= 4;
                 goto EndLoop;
             }
         }
@@ -153,11 +163,13 @@ public class WorldManager : MonoBehaviour {
             {
                 enemy = bossEnemies[0];
                 enemyCount = bossCount;
+                enemyBaseAmount = bossBaseCount;
                 enemyIncrease = 2;
                 waveDelay = 5;
                 waveDelayChange = 5;
 
-                bossCount *= 2;
+                bossBaseCount *= 4;
+                bossCount *= 4;
                 goto EndLoop;
             }
         }
@@ -261,7 +273,9 @@ public class WorldManager : MonoBehaviour {
 
     private void EndWave()
     {
-        GameDataManager.Instance.AddCoins((int)(wave * waveCoinRewardMultiplier));
+        iceCream.Hop();
+
+        GameDataManager.Instance.AddCoins(waveCoins);
 
         wave++;
 
