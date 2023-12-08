@@ -16,6 +16,6 @@ MonoBehaviour:
   rarity: 2
   health: 16
   damage: 1
-  speed: 1.5
+  speed: 1.2
   size: 1
   coins: 40

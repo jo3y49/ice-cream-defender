@@ -85,6 +85,8 @@ public class WorldManager : MonoBehaviour {
 
     private void PlayerReady()
     {
+        AudioManager.instance.StartWave();
+
         StartWave(wave);
 
         waveButton.SetActive(false);
@@ -96,7 +98,7 @@ public class WorldManager : MonoBehaviour {
         int enemyCount = 10;
         int enemyBaseAmount = 1;
         int enemyIncrease = 3;
-        int waveDelay = 5;
+        float waveDelay = 3;
         int waveDelayChange = 4;
 
         foreach (int i in normalWaves)
@@ -152,7 +154,7 @@ public class WorldManager : MonoBehaviour {
                 enemy = bossEnemies[0];
                 enemyCount = bossCount;
                 enemyIncrease = 2;
-                waveDelay = 10;
+                waveDelay = 5;
                 waveDelayChange = 5;
 
                 bossCount *= 2;
@@ -165,7 +167,7 @@ public class WorldManager : MonoBehaviour {
         SetWave(enemy, enemyCount, enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange);
     }
 
-    private void SetWave(EnemyData enemyData, int total, int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
+    private void SetWave(EnemyData enemyData, int total, int enemyBaseAmount, int enemyIncrease, float waveDelay, int waveDelayChange)
     {
         while (waveEnemies.Count < total)
         {
@@ -175,7 +177,7 @@ public class WorldManager : MonoBehaviour {
         StartCoroutine(SpawnEnemies(enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange));
     }
 
-    private IEnumerator SpawnEnemies(int enemyBaseAmount, int enemyIncrease, int waveDelay, int waveDelayChange)
+    private IEnumerator SpawnEnemies(int enemyBaseAmount, int enemyIncrease, float waveDelay, int waveDelayChange)
     {
         yield return new WaitForSeconds(startWaveDelay);
 
@@ -193,7 +195,7 @@ public class WorldManager : MonoBehaviour {
                 }
             }
 
-            if (i == waveDelayChange) waveDelay = waveDelay / 2 + 1;
+            if (i == waveDelayChange) waveDelay /= 2;
 
             for (int j = 0; j < enemyBaseAmount; j++)
             {
@@ -209,7 +211,13 @@ public class WorldManager : MonoBehaviour {
 
             i++;
 
-            yield return new WaitForSeconds(waveDelay);
+            float t = 0;
+
+            while (t < waveDelay && liveEnemies.Count > 0)
+            {
+                t += Time.deltaTime; 
+                yield return null;
+            }
         }
 
         EndLoop:

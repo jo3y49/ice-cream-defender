@@ -7,7 +7,7 @@ public class GridSlot : MonoBehaviour {
     [SerializeField] private GameObject turretPrefab, trapPrefab, sundaePrefab;
     private Turret turret;
     private Wall trap;
-    private Sundae sundae;
+    private Bomb sundae;
 
     public Placeable activeItem;
 
@@ -16,7 +16,7 @@ public class GridSlot : MonoBehaviour {
 
         trap = (Wall)CreateItem(trapPrefab);
 
-        sundae = (Sundae)CreateItem(sundaePrefab);
+        sundae = (Bomb)CreateItem(sundaePrefab);
     }
 
     private Placeable CreateItem(GameObject prefab)
@@ -54,7 +54,7 @@ public class GridSlot : MonoBehaviour {
             case WallData:
                 activeItem = trap;
                 break;
-            case SundaeData:
+            case BombData:
                 activeItem = sundae;
                 break;
             default:

@@ -34,9 +34,11 @@ public class Turret : Placeable
 
     private IEnumerator ShootAtEnemies()
     {
+        LayerMask layer = 1 << LayerMask.NameToLayer("Enemy");
+
         while (true)
         {
-            RaycastHit2D hit = Physics2D.Raycast(firePoint, bulletDirection, range);
+            RaycastHit2D hit = Physics2D.Raycast(firePoint, bulletDirection, range, layer);
 
             Debug.DrawRay(firePoint, bulletDirection * range, Color.red);
 

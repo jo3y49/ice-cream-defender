@@ -17,7 +17,7 @@ MonoBehaviour:
   level: 4
   price: 250
   health: 7
-  damage: 2
+  damage: 1
   fireRate: 5
   bulletSpeed: 10
   range: 15

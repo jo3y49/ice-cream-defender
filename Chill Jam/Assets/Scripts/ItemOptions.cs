@@ -5,10 +5,16 @@ using UnityEngine.UI;
 
 public class ItemOptions : MonoBehaviour {
     [SerializeField] private Image itemImage;
-    [SerializeField] private GameObject upgradeButton;
+    [SerializeField] private Button upgradeButton;
+    private Image upgradeImage;
+    [SerializeField] private Sprite upgradeReady, upgradeNot, upgradeMax;
     [SerializeField] private TextMeshProUGUI levelText;
     private GridSlot gridSlot;
     private PlaceableData data;
+
+    private void Awake() {
+        upgradeImage = upgradeButton.GetComponent<Image>();
+    }
 
     public void SetData(GridSlot gridSlot)
     {
@@ -32,14 +38,22 @@ public class ItemOptions : MonoBehaviour {
         levelText.text = data.level.ToString();
 
         itemImage.sprite = data.sprite;
+        itemImage.SetNativeSize();
 
         if (data.upgrade != null)
         {
-            upgradeButton.SetActive(true);
-            upgradeButton.GetComponent<Button>().interactable = GameDataManager.Instance.GetCoins() >= data.upgrade.price;
+            if (GameDataManager.Instance.GetCoins() >= data.upgrade.price)
+            {
+                upgradeImage.sprite = upgradeReady;
+            } else
+            {
+                upgradeImage.sprite = upgradeNot;
+            }
         }
         else 
-            upgradeButton.SetActive(false);
+            upgradeImage.sprite = upgradeMax;
+
+        upgradeButton.interactable = upgradeImage.sprite == upgradeReady;
     }
 
     public void Move()

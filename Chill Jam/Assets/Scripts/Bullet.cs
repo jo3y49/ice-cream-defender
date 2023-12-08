@@ -25,6 +25,8 @@ public class Bullet : MonoBehaviour {
 
     private void Contact()
     {
+        AudioManager.instance.EnemyHit();
+
         StopAllCoroutines();
         
         Pool.Instance.ReturnBullet(gameObject);

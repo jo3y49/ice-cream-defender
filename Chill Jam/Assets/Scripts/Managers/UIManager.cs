@@ -15,17 +15,10 @@ public class UIManager : MonoBehaviour {
         itemMenu.TryGetComponent(out itemOptions);
         itemMenu.SetActive(false);
         cancel.SetActive(false);
-        
-        SetLives();
     }
 
     private void Update() {
         coins.text = GameDataManager.Instance.GetCoins().ToString();
-    }
-
-    public void SetLives()
-    {
-        lives.text = GameDataManager.Instance.GetLives().ToString();
     }
 
     public void SetWave(int wave)

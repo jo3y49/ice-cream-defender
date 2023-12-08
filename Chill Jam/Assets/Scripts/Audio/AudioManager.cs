@@ -4,6 +4,7 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour {
     public static AudioManager instance;
     private AudioSource audioSource;
+    [SerializeField] private AudioClip waveStart, lose, enemyHit;
     [SerializeField] private AudioClip[] uiSounds;
     private void Awake() {
         if (instance == null)
@@ -16,6 +17,21 @@ public class AudioManager : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+    }
+
+    public void StartWave()
+    {
+        PlayClip(waveStart);
+    }
+
+    public void Lose()
+    {
+        PlayClip(lose);
+    }
+
+    public void EnemyHit()
+    {
+        PlayClip(enemyHit);
     }
 
     public void PlayUIClip(int i)

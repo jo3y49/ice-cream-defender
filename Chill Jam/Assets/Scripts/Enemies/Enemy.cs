@@ -48,7 +48,7 @@ public class Enemy : MonoBehaviour {
 
         else if (other.gameObject.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<Player>().Hit();
+            other.gameObject.GetComponentInParent<IceCream>().Hit();
             Death(0);
         }
     }
