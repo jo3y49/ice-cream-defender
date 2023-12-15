@@ -66,7 +66,7 @@ public class UIManager : MonoBehaviour {
         gameOverUI.SetActive(true);
     }
 
-    public bool Lossed()
+    public bool Loss()
     {
         return gameOverUI.activeSelf;
     }

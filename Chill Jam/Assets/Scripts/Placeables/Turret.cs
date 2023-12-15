@@ -13,6 +13,8 @@ public class Turret : Placeable
 
     protected override void SetWeapon()
     {
+        StopAllCoroutines();
+
         int direction = (int)Mathf.Sign(transform.position.x);
 
         sr.flipX = direction >= 0;

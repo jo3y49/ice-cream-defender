@@ -8,6 +8,8 @@ public class Pool : MonoBehaviour {
     private Queue<GameObject> bullets = new();
     private Queue<GameObject> enemies = new();
 
+    private List<GameObject> activeEnemies = new List<GameObject>();
+
     private void Awake() {
         Instance = this;
 
@@ -22,7 +24,9 @@ public class Pool : MonoBehaviour {
             NewObject(bulletPrefab, bullets);
         }
 
-        return bullets.Dequeue();
+        GameObject bullet = bullets.Dequeue();
+        bullet.SetActive(true);
+        return bullet;
     }
 
     public GameObject GetEnemy()
@@ -32,7 +36,10 @@ public class Pool : MonoBehaviour {
             NewObject(enemyPrefab, enemies);
         }
 
-        return enemies.Dequeue();
+        GameObject enemy = enemies.Dequeue();
+        enemy.SetActive(true);
+        activeEnemies.Add(enemy);
+        return enemy;
     }
 
     private void NewObject(GameObject prefab, Queue<GameObject> queue, int count = 1)
@@ -55,5 +62,11 @@ public class Pool : MonoBehaviour {
     {
         obj.SetActive(false);
         enemies.Enqueue(obj);
+        activeEnemies.Remove(obj);
+    }
+
+    public bool AreEnemiesActive()
+    {
+        return activeEnemies.Count > 0;
     }
 }

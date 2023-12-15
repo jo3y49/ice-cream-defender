@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,10 +12,10 @@ public class WorldManager : MonoBehaviour {
     [SerializeField] private Transform[] spawns;
     private float bigY;
     [SerializeField] private GameObject waveButton;
-    private List<EnemyData> normalEnemies = new();
-    private List<EnemyData> speedyEnemies = new();
-    private List<EnemyData> bulkyEnemies = new();
-    private List<EnemyData> bossEnemies = new(); 
+    private readonly List<EnemyData> normalEnemies = new();
+    private readonly List<EnemyData> speedyEnemies = new();
+    private readonly List<EnemyData> bulkyEnemies = new();
+    private readonly List<EnemyData> bossEnemies = new(); 
 
     public float timeBetweenSpawns = 1;
     public float startWaveDelay = 2;
@@ -37,8 +38,8 @@ public class WorldManager : MonoBehaviour {
 
     private int wave = 1;
     private int spawnAmount;
-    public List<EnemyData> waveEnemies = new();
-    public List<GameObject> liveEnemies = new();
+    public Queue<EnemyData> waveEnemies = new();
+    // public List<GameObject> liveEnemies = new();
 
     private void Awake() {
         Instance = this;
@@ -106,88 +107,71 @@ public class WorldManager : MonoBehaviour {
 
         if (wave == 6) timeBetweenSpawns /= 2f;
 
-        foreach (int i in normalWaves)
+        
+        if (Array.IndexOf(normalWaves, wave) != -1)
         {
-            if (i == wave)
+            enemy = normalEnemies[0];
+            enemyCount = normalCount;
+            enemyBaseAmount = normalBaseCount++;
+            if (wave == 1)
             {
-                enemy = normalEnemies[0];
-                enemyCount = normalCount;
-                enemyBaseAmount = normalBaseCount++;
-                if (i == 1)
-                {
-                    waveDelayChange = 5;
-                } else if (i == 6)
-                {
-                    normalCount *= 2;
-                    enemyBaseAmount = normalBaseCount++;
-                    waveDelay /= 2;
-                } else if (i == 8)
-                {
-                    enemyBaseAmount = normalBaseCount++;
-                    waveDelay /= 4;
-                }
-
-                normalCount *= 2;
-                goto EndLoop;
-            }
-        }
-
-        foreach (int i in speedyWaves)
-        {
-            if (i == wave)
-            {
-                enemy = speedyEnemies[0];
-                enemyCount = speedyCount;
-                enemyBaseAmount = speedyBaseCount++;
-
-                if (i > 5)
-                {
-                    speedyCount *= 3;
-                    enemyBaseAmount = speedyBaseCount++;
-                    waveDelay /= 3;
-                }
-    
-                speedyCount *= 2;
-                goto EndLoop;
-            }
-        }
-
-        foreach (int i in bulkyWaves)
-        {
-            if (i == wave)
-            {
-                enemy = bulkyEnemies[0];
-                enemyCount = bulkyCount;
-                enemyBaseAmount = bulkyBaseCount;
-                enemyIncrease = 4;
-                waveDelayChange = 3;
-
-                if (i == 9) waveDelay /= 2;
-
-                bulkyCount *= 5;
-                bulkyBaseCount *= 5;
-                goto EndLoop;
-            }
-        }
-
-        foreach (int i in bossWaves)
-        {
-            if (i == wave)
-            {
-                enemy = bossEnemies[0];
-                enemyCount = bossCount;
-                enemyBaseAmount = bossBaseCount;
-                enemyIncrease = 2;
-                waveDelay = 5;
                 waveDelayChange = 5;
-
-                bossBaseCount *= 4;
-                bossCount *= 4;
-                goto EndLoop;
+            } else if (wave == 6)
+            {
+                normalCount *= 2;
+                enemyBaseAmount = normalBaseCount++;
+                waveDelay /= 2;
+            } else if (wave == 8)
+            {
+                enemyBaseAmount = normalBaseCount++;
+                waveDelay /= 4;
             }
-        }
 
-        EndLoop:
+            normalCount *= 2;
+        }
+    
+        else if (Array.IndexOf(speedyWaves, wave) != -1)
+        {
+            enemy = speedyEnemies[0];
+            enemyCount = speedyCount;
+            enemyBaseAmount = speedyBaseCount++;
+
+            if (wave > 5)
+            {
+                speedyCount *= 3;
+                enemyBaseAmount = speedyBaseCount++;
+                waveDelay /= 3;
+            }
+
+            speedyCount *= 2;
+        }
+    
+        else if (Array.IndexOf(bulkyWaves, wave) != -1)
+        {
+            enemy = bulkyEnemies[0];
+            enemyCount = bulkyCount;
+            enemyBaseAmount = bulkyBaseCount;
+            enemyIncrease = 4;
+            waveDelayChange = 3;
+
+            if (wave == 9) waveDelay /= 2;
+
+            bulkyCount *= 5;
+            bulkyBaseCount *= 5;
+        }
+    
+        else if (Array.IndexOf(bossWaves, wave) != -1)
+        {
+            enemy = bossEnemies[0];
+            enemyCount = bossCount;
+            enemyBaseAmount = bossBaseCount;
+            enemyIncrease = 2;
+            waveDelay = 5;
+            waveDelayChange = 5;
+
+            bossBaseCount *= 4;
+            bossCount *= 4;
+        }
 
         SetWave(enemy, enemyCount, enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange);
     }
@@ -196,7 +180,7 @@ public class WorldManager : MonoBehaviour {
     {
         while (waveEnemies.Count < total)
         {
-            waveEnemies.Add(enemyData);
+            waveEnemies.Enqueue(enemyData);
         }
 
         StartCoroutine(SpawnEnemies(enemyBaseAmount, enemyIncrease, waveDelay, waveDelayChange));
@@ -224,12 +208,12 @@ public class WorldManager : MonoBehaviour {
 
             for (int j = 0; j < enemyBaseAmount; j++)
             {
-                int r = Random.Range(0, spawnAmount);
+                int r = UnityEngine.Random.Range(0, spawnAmount);
                 Transform spawn = spawns[r];
 
                 if (waveEnemies.Count > 0) 
                 {
-                    EnemyData nextEnemy = waveEnemies[0];
+                    EnemyData nextEnemy = waveEnemies.Peek();
 
                     SpawnEnemy(spawn, nextEnemy);
                 }
@@ -243,7 +227,7 @@ public class WorldManager : MonoBehaviour {
 
             float t = 0;
 
-            while (t < waveDelay && liveEnemies.Count > 0)
+            while (t < waveDelay && Pool.Instance.AreEnemiesActive())
             {
                 t += Time.deltaTime; 
                 yield return null;
@@ -259,7 +243,7 @@ public class WorldManager : MonoBehaviour {
     {
         if (nextEnemy == null) return;
 
-        waveEnemies.Remove(nextEnemy);
+        waveEnemies.Dequeue();
 
         GameObject enemyObject = Pool.Instance.GetEnemy();
 
@@ -268,25 +252,21 @@ public class WorldManager : MonoBehaviour {
         else 
             enemyObject.transform.position = new Vector3(spawn.position.x, bigY, spawn.position.z);
 
-        liveEnemies.Add(enemyObject);
-        
         enemyObject.SetActive(true);
         enemyObject.GetComponent<Enemy>().Initialize(nextEnemy, spawn);
     }
 
     private IEnumerator WaitForEnd()
     {
-        while (liveEnemies.Count > 0)
+        // check if there are any gameobjects with the enemy component active in the scene
+
+        while (Pool.Instance.AreEnemiesActive())
         {
-            int n = liveEnemies.Count;
+            yield return null;
+        }
 
-            for (int i = n - 1; i >= 0; i--)
-            {
-                if (!liveEnemies[i].activeSelf) liveEnemies.RemoveAt(i);
-            }
 
-                yield return null;
-            }
+        
 
         EndWave();
     }
@@ -295,19 +275,16 @@ public class WorldManager : MonoBehaviour {
     {
         GameDataManager.Instance.AddCoins(coins);
 
-        liveEnemies.Remove(enemy);
-
         Pool.Instance.ReturnEnemy(enemy);
     }
 
     private void EndWave()
     {
-        if (UIManager.Instance.Lossed()) return;
+        if (UIManager.Instance.Loss()) return;
 
         StopAllCoroutines();
 
         waveEnemies = new();
-        liveEnemies = new();
 
         AudioManager.instance.Win();
 
@@ -330,12 +307,12 @@ public class WorldManager : MonoBehaviour {
 
         StopAllCoroutines();
 
-        int n = liveEnemies.Count;
-
-        for (int i = n - 1; i >= 0; i--)
+        // Call the shot method on every active object with the enemy component
+        foreach (Enemy e in FindObjectsOfType<Enemy>())
         {
-            Pool.Instance.ReturnEnemy(liveEnemies[i]);
-        }
+            e.Shot(100);
+        } 
+        
 
         EndWave();
         

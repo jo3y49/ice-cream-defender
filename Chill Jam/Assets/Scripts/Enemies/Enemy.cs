@@ -23,7 +23,6 @@ public class Enemy : MonoBehaviour {
 
     public void Initialize(EnemyData enemyData, Transform spawn)
     {
-        
         sr.sprite = enemyData.sprite;
         health = maxHealth = enemyData.health;
         healthBar.localScale = healthBarScale;
@@ -69,6 +68,8 @@ public class Enemy : MonoBehaviour {
 
     public void Shot(int damage)
     {
+        if (health <= 0) return;
+
         health -= damage;
         if (health <= 0) Death();
 
